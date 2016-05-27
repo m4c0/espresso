@@ -1,4 +1,4 @@
-#include "main.hpp"
+#include "ClassParser.hpp"
 
 using namespace Espresso;
 

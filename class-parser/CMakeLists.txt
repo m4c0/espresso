@@ -1,6 +1,10 @@
-add_library(espresso-class-parser-static STATIC main.cpp)
+add_library(espresso-class-parser-static STATIC
+    Class.cpp
+    ClassParser.cpp)
+target_include_directories(espresso-class-parser-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(espresso-class-parser-static PRIVATE cxx_auto_type)
 set_target_properties(espresso-class-parser-static PROPERTIES OUTPUT_NAME espresso-class-parser)
 
 add_library(espresso-class-parser SHARED)
-target_link_libraries(espresso-class-parser PRIVATE espresso-class-parser-static)
+target_link_libraries(espresso-class-parser PUBLIC espresso-class-parser-static)
 
