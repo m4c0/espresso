@@ -1,6 +1,8 @@
 #ifndef ESPRESSO_CLASSPARSER_DATASTREAM_H
 #define ESPRESSO_CLASSPARSER_DATASTREAM_H
 
+#include <cstdint>
+
 namespace Espresso {
     class DataStream {
     public:
