@@ -11,6 +11,10 @@ namespace Espresso {
             remaining = len;
         }
 
+        bool reachedEOS() {
+            return remaining == 0;
+        }
+
         uint8_t readU8() {
             if (remaining < 1) return 0;
             auto result = *buffer;

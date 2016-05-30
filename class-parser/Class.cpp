@@ -1,7 +1,9 @@
 #include "Class.hpp"
-#include "DataStream.hpp"
 
-using namespace Espresso;
+#include "DataStream.hpp"
+#include "constant-pool/Manager.hpp"
+
+using namespace Espresso::ClassParser;
 
 Class::Class(const char * buffer, int len) {
     auto data = DataStream(buffer, len);
@@ -23,12 +25,11 @@ Class::Class(const char * buffer, int len) {
         return;
     }
 
-    auto cpoolMax = data.readU16();
-    if (cpoolMax == 0) {
-        message = "Invalid constant pool";
+    auto cpool = ConstantPool::Manager(data);
+    if (!cpool) {
+        message = cpool.error();
         return;
     }
-    auto cpoolSize = cpoolMax - 1;
 
     message = 0;
 }
