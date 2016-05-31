@@ -31,6 +31,24 @@ Class::Class(const char * buffer, int len) {
         return;
     }
 
+    auto access = data.readU16();
+    if (!access) {
+        message = "Invalid access flags";
+        return;
+    }
+
+    auto thisClass = data.readU16();
+    if (!thisClass || !cpool[thisClass]) { // TODO: check if cpool agrees
+        message = "Invalid class";
+        return;
+    }
+
+    auto superClass = data.readU16();
+    if (!superClass || !cpool[superClass]) { // TODO: check if cpool agrees
+        message = "Invalid super class";
+        return;
+    }
+
     message = 0;
 }
 Class::~Class() {
