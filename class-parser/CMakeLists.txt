@@ -1,9 +1,13 @@
 add_library(espresso-class-parser-static STATIC
     Class.cpp
     constant-pool/ClassInfo.cpp
+    constant-pool/Double.cpp
+    constant-pool/Float.cpp
     constant-pool/FieldRefInfo.cpp
+    constant-pool/Integer.cpp
     constant-pool/InterfaceMethodRefInfo.cpp
     constant-pool/Item.cpp
+    constant-pool/Long.cpp
     constant-pool/Manager.cpp
     constant-pool/MethodRefInfo.cpp
     constant-pool/NameAndType.cpp

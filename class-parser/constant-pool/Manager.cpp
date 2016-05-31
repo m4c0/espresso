@@ -1,8 +1,12 @@
 #include "Manager.hpp"
 
 #include "ClassInfo.hpp"
+#include "Double.hpp"
 #include "FieldRefInfo.hpp"
+#include "Float.hpp"
+#include "Integer.hpp"
 #include "InterfaceMethodRefInfo.hpp"
+#include "Long.hpp"
 #include "MethodRefInfo.hpp"
 #include "NameAndType.hpp"
 #include "StringInfo.hpp"
@@ -26,6 +30,18 @@ Manager::Manager(DataStream & data) {
         switch (type) {
             case 1:
                 items[idx] = new Utf8(data);
+                break;
+            case 3:
+                items[idx] = new Integer(data);
+                break;
+            case 4:
+                items[idx] = new Float(data);
+                break;
+            case 5:
+                items[idx] = new Long(data);
+                break;
+            case 6:
+                items[idx] = new Double(data);
                 break;
             case 7:
                 items[idx] = new ClassInfo(*this, data);
