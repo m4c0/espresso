@@ -1,7 +1,18 @@
 #include "Class.hpp"
+#include "Logger.hpp"
 
+#include <cstdio>
 #include <iostream>
 #include <fstream>
+
+void _log(const char * fmt, ...) {
+    va_list va;
+    va_start(va, fmt);
+    vfprintf(stderr, fmt, va);
+    va_end(va);
+
+    std::cerr << std::endl;
+}
 
 int main(int argc, char ** argv) {
     if (argc != 2) {
@@ -14,6 +25,8 @@ int main(int argc, char ** argv) {
         std::cerr << "File not found: " << argv[1] << std::endl;
         return 2;
     }
+
+    Espresso::Log = _log;
 
     auto size = in.tellg();
 

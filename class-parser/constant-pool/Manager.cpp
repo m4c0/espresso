@@ -6,6 +6,7 @@
 #include "Float.hpp"
 #include "Integer.hpp"
 #include "InterfaceMethodRefInfo.hpp"
+#include "Logger.hpp"
 #include "Long.hpp"
 #include "MethodRefInfo.hpp"
 #include "NameAndType.hpp"
@@ -21,11 +22,13 @@ Manager::Manager(DataStream & data) {
         return;
     }
     size = cpoolMax - 1;
+
     items = new Item *[size];
     for (int idx = 0; idx < size; idx++) {
         items[idx] = 0;
     }
     for (int idx = 0; idx < size; idx++) {
+        bool itemTakesExtraId = false;
         auto type = data.readU8();
         switch (type) {
             case 1:
@@ -39,9 +42,11 @@ Manager::Manager(DataStream & data) {
                 break;
             case 5:
                 items[idx] = new Long(data);
+                itemTakesExtraId = true;
                 break;
             case 6:
                 items[idx] = new Double(data);
+                itemTakesExtraId = true;
                 break;
             case 7:
                 items[idx] = new ClassInfo(*this, data);
@@ -62,12 +67,16 @@ Manager::Manager(DataStream & data) {
                 items[idx] = new NameAndType(*this, data);
                 break;
             default: 
+                if (Espresso::Log) Espresso::Log("Found unknown constant pool item tag: %d", type);
                 message = "Invalid constant pool item type";
                 return;
         }
         if (!*items[idx]) {
             message = items[idx]->error();
             return;
+        }
+        if (itemTakesExtraId) {
+            idx++; // 64-bit data does that to constant pool, due to reasons
         }
     }
 
