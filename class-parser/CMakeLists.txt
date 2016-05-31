@@ -1,10 +1,13 @@
 add_library(espresso-class-parser-static STATIC
     Class.cpp
     constant-pool/ClassInfo.cpp
+    constant-pool/FieldRefInfo.cpp
+    constant-pool/InterfaceMethodRefInfo.cpp
     constant-pool/Item.cpp
     constant-pool/Manager.cpp
     constant-pool/MethodRefInfo.cpp
     constant-pool/NameAndType.cpp
+    constant-pool/RefInfo.cpp
     constant-pool/Utf8.cpp
     )
 target_include_directories(espresso-class-parser-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

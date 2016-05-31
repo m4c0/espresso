@@ -1,6 +1,8 @@
 #include "Manager.hpp"
 
 #include "ClassInfo.hpp"
+#include "FieldRefInfo.hpp"
+#include "InterfaceMethodRefInfo.hpp"
 #include "MethodRefInfo.hpp"
 #include "NameAndType.hpp"
 #include "Utf8.hpp"
@@ -27,8 +29,14 @@ Manager::Manager(DataStream & data) {
             case 7:
                 items[idx] = new ClassInfo(*this, data);
                 break;
+            case 9:
+                items[idx] = new FieldRefInfo(*this, data);
+                break;
             case 10:
                 items[idx] = new MethodRefInfo(*this, data);
+                break;
+            case 11:
+                items[idx] = new InterfaceMethodRefInfo(*this, data);
                 break;
             case 12:
                 items[idx] = new NameAndType(*this, data);
