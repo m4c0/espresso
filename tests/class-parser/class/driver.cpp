@@ -4,12 +4,17 @@
 #include <fstream>
 
 int main(int argc, char ** argv) {
-    if (argc != 2) return 1;
+    if (argc != 2) {
+        std::cerr << "Driver must be called with the .class file to test" << std::endl;
+        return 1;
+    }
 
-    std::string file(argv[1]);
-    auto shouldPass = file.find(".fail.") == std::string::npos;
+    std::ifstream in(argv[1], std::ios::in | std::ios::binary | std::ios::ate);
+    if (!in) {
+        std::cerr << "File not found: " << argv[1] << std::endl;
+        return 2;
+    }
 
-    std::ifstream in(file, std::ios::in | std::ios::binary | std::ios::ate);
     auto size = in.tellg();
 
     auto buffer = new char[size];
@@ -19,9 +24,8 @@ int main(int argc, char ** argv) {
     Espresso::ClassParser::Class cls(buffer, size);
     if (!cls) {
         std::cerr << cls.error() << std::endl;
+        return 3;
     }
-    if (cls == shouldPass) return 0;
-    
-    return 2;
+    return 0;
 }
 
