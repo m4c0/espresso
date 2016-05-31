@@ -8,6 +8,7 @@ add_library(espresso-class-parser-static STATIC
     constant-pool/MethodRefInfo.cpp
     constant-pool/NameAndType.cpp
     constant-pool/RefInfo.cpp
+    constant-pool/StringInfo.cpp
     constant-pool/Utf8.cpp
     )
 target_include_directories(espresso-class-parser-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

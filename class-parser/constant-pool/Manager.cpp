@@ -5,6 +5,7 @@
 #include "InterfaceMethodRefInfo.hpp"
 #include "MethodRefInfo.hpp"
 #include "NameAndType.hpp"
+#include "StringInfo.hpp"
 #include "Utf8.hpp"
 
 using namespace Espresso::ClassParser::ConstantPool;
@@ -28,6 +29,9 @@ Manager::Manager(DataStream & data) {
                 break;
             case 7:
                 items[idx] = new ClassInfo(*this, data);
+                break;
+            case 8:
+                items[idx] = new StringInfo(*this, data);
                 break;
             case 9:
                 items[idx] = new FieldRefInfo(*this, data);
