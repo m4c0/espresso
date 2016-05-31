@@ -1,6 +1,8 @@
 #include "Manager.hpp"
 
 #include "ClassInfo.hpp"
+#include "MethodRefInfo.hpp"
+#include "NameAndType.hpp"
 #include "Utf8.hpp"
 
 using namespace Espresso::ClassParser::ConstantPool;
@@ -24,6 +26,12 @@ Manager::Manager(DataStream & data) {
                 break;
             case 7:
                 items[idx] = new ClassInfo(*this, data);
+                break;
+            case 10:
+                items[idx] = new MethodRefInfo(*this, data);
+                break;
+            case 12:
+                items[idx] = new NameAndType(*this, data);
                 break;
             default: 
                 message = "Invalid constant pool item type";
