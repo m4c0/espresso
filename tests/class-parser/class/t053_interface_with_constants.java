@@ -1,5 +1,4 @@
-enum t023_enum_with_constants {
-    ;
+interface t053_interface_with_constants {
     public static String mah = "";
     public static int meh = 0;
     public static float mih = 0;

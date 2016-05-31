@@ -1,4 +1,4 @@
-class t024_class_with_code {
+class t054_class_with_code {
     void test() throws Exception {
         System.out.println("Run!");
         String res = "";

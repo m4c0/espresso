@@ -1,4 +1,4 @@
-enum t022_enum_with_fields {
+enum t052_enum_with_fields {
     ;
     public String all;
     public volatile int your;

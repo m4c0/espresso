@@ -1,4 +1,5 @@
-class t023_class_with_constants {
+enum t053_enum_with_constants {
+    ;
     public static String mah = "";
     public static int meh = 0;
     public static float mih = 0;
