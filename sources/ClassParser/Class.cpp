@@ -63,7 +63,7 @@ Class::Class(const char * buffer, int len) {
 
     auto fieldCount = data.readU16();
     for (int i = 0; i < fieldCount; i++) {
-        auto field = Field(data);
+        auto field = Field(cpool, data);
         if (!field) {
             message = field.error();
             return;
@@ -72,7 +72,7 @@ Class::Class(const char * buffer, int len) {
 
     auto methodCount = data.readU16();
     for (int i = 0; i < methodCount; i++) {
-        auto method = Method(data);
+        auto method = Method(cpool, data);
         if (!method) {
             message = method.error();
             return;
@@ -81,7 +81,7 @@ Class::Class(const char * buffer, int len) {
 
     auto attributeCount = data.readU16();
     for (int i = 0; i < attributeCount; i++) {
-        auto attribute = Attribute(data);
+        auto attribute = Attribute(cpool, data);
         if (!attribute) {
             message = attribute.error();
             return;

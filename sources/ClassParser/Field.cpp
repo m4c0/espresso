@@ -1,7 +1,7 @@
 #include "Field.hpp"
 
-using namespace Espresso;
+using namespace Espresso::ClassParser;
 
-Field::Field(DataStream & data) : ClassEntry(data) {
+Field::Field(ConstantPool::Manager & cpool, DataStream & data) : ClassEntry(cpool, data) {
 }
 

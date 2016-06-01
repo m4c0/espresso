@@ -2,10 +2,10 @@
 
 #include "Attribute.hpp"
 
-using namespace Espresso;
+using namespace Espresso::ClassParser;
 
 // TODO: Eventually do something with this
-ClassEntry::ClassEntry(DataStream & data) {
+ClassEntry::ClassEntry(ConstantPool::Manager & cpool, DataStream & data) {
     auto access = data.readU16();
 
     auto name = data.readU16();
@@ -14,7 +14,7 @@ ClassEntry::ClassEntry(DataStream & data) {
 
     auto attrCount = data.readU16();
     for (int i = 0; i < attrCount; i++) {
-        auto attr = Attribute(data);
+        auto attr = Attribute(cpool, data);
         if (!attr) {
             message = attr.error();
             return;

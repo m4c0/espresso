@@ -2,11 +2,14 @@
 #define ESPRESSO_CLASSPARSER_FIELD_H
 
 #include "ClassEntry.hpp"
+#include "ConstantPool/Manager.hpp"
 
 namespace Espresso {
-    class Field : public ClassEntry {
-    public:
-        Field(DataStream & data);
+    namespace ClassParser {
+        class Field : public ClassEntry {
+        public:
+            Field(ConstantPool::Manager & cpool, DataStream & data);
+        };
     };
 };
 
