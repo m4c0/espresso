@@ -31,6 +31,13 @@ namespace Espresso {
             if (remaining < 4) return 0;
             return (readU16() << 16) | readU16();
         }
+
+        const uint8_t * readBytes(int len) {
+            if (remaining < len) return 0;
+            const uint8_t * ptr = (const uint8_t *)buffer;
+            buffer += len;
+            return ptr;
+        }
     private:
         const char * buffer;
         int remaining;

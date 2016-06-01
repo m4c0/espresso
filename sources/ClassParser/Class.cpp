@@ -1,6 +1,9 @@
 #include "Class.hpp"
 
+#include "Attribute.hpp"
 #include "DataStream.hpp"
+#include "Field.hpp"
+#include "Method.hpp"
 #include "ConstantPool/Manager.hpp"
 
 using namespace Espresso::ClassParser;
@@ -54,6 +57,33 @@ Class::Class(const char * buffer, int len) {
         auto ifaceIdx = data.readU16();
         if (!cpool.itemMatchesTag(ifaceIdx, 7)) { // TODO: improve those tag constants
             message = "Invalid interface for class";
+            return;
+        }
+    }
+
+    auto fieldCount = data.readU16();
+    for (int i = 0; i < fieldCount; i++) {
+        auto field = Field(data);
+        if (!field) {
+            message = field.error();
+            return;
+        }
+    }
+
+    auto methodCount = data.readU16();
+    for (int i = 0; i < methodCount; i++) {
+        auto method = Method(data);
+        if (!method) {
+            message = method.error();
+            return;
+        }
+    }
+
+    auto attributeCount = data.readU16();
+    for (int i = 0; i < attributeCount; i++) {
+        auto attribute = Attribute(data);
+        if (!attribute) {
+            message = attribute.error();
             return;
         }
     }
