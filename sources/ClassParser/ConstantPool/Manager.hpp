@@ -12,6 +12,11 @@ namespace Espresso {
                 Manager(DataStream & data);
                 ~Manager();
 
+                template<class T>
+                const T & itemForIndex(int idx) const {
+                    return *(T *)items[idx - 1];
+                }
+
                 const Item * const * operator[](int idx) const;
 
                 bool itemMatchesTag(int idx, int type) const;

@@ -1,6 +1,5 @@
 #include "Class.hpp"
 
-#include "Attribute.hpp"
 #include "DataStream.hpp"
 #include "Field.hpp"
 #include "Method.hpp"
@@ -79,16 +78,9 @@ Class::Class(const char * buffer, int len) {
         }
     }
 
-    auto attributeCount = data.readU16();
-    for (int i = 0; i < attributeCount; i++) {
-        auto attribute = Attribute(cpool, data);
-        if (!attribute) {
-            message = attribute.error();
-            return;
-        }
+    if (parseAttributes(cpool, data)) {
+        message = 0;
     }
-
-    message = 0;
 }
 Class::~Class() {
 }

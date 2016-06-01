@@ -10,6 +10,13 @@ namespace Espresso {
         class Attribute : public Failable {
         public:
             Attribute(ConstantPool::Manager & cpool, DataStream & data);
+
+            const char *    name()  const { return name_; }
+            const uint8_t * bytes() const { return bytes_; }
+
+        private:
+            const char * name_;
+            const uint8_t * bytes_;
         };
     };
 };

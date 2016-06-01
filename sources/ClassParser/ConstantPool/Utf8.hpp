@@ -11,6 +11,10 @@ namespace Espresso {
             public:
                 Utf8(DataStream & data);
                 ~Utf8();
+
+                operator const char *() const {
+                    return value;
+                }
             private:
                 const char * value;
             };

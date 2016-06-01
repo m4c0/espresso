@@ -1,5 +1,6 @@
 add_library(espresso-class-parser-static STATIC
     Attribute.cpp
+    Attributed.cpp
     Class.cpp
     ClassEntry.cpp
     Field.cpp

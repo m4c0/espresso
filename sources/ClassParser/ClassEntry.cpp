@@ -1,7 +1,5 @@
 #include "ClassEntry.hpp"
 
-#include "Attribute.hpp"
-
 using namespace Espresso::ClassParser;
 
 // TODO: Eventually do something with this
@@ -12,15 +10,8 @@ ClassEntry::ClassEntry(ConstantPool::Manager & cpool, DataStream & data) {
 
     auto descriptor = data.readU16();
 
-    auto attrCount = data.readU16();
-    for (int i = 0; i < attrCount; i++) {
-        auto attr = Attribute(cpool, data);
-        if (!attr) {
-            message = attr.error();
-            return;
-        }
+    if (parseAttributes(cpool, data)) {
+        message = 0;
     }
-
-    message = 0;
 }
 
