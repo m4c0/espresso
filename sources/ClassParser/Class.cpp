@@ -1,7 +1,7 @@
 #include "Class.hpp"
 
 #include "DataStream.hpp"
-#include "constant-pool/Manager.hpp"
+#include "ConstantPool/Manager.hpp"
 
 using namespace Espresso::ClassParser;
 

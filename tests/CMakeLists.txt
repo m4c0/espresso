@@ -13,6 +13,6 @@ function(espresso_java_test FOLDER TEST_WE DEBUG_FLAG)
     add_custom_target(espresso-${FOLDER}-${TEST_WE} ALL DEPENDS ${BINARY})
 endfunction()
 
-add_subdirectory(class-parser)
-add_subdirectory(milestones)
+add_subdirectory(ClassParser)
+add_subdirectory(Milestones)
 

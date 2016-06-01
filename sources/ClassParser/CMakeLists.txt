@@ -1,20 +1,19 @@
 add_library(espresso-class-parser-static STATIC
     Class.cpp
     Logger.cpp
-    constant-pool/ClassInfo.cpp
-    constant-pool/Double.cpp
-    constant-pool/Float.cpp
-    constant-pool/FieldRefInfo.cpp
-    constant-pool/Integer.cpp
-    constant-pool/InterfaceMethodRefInfo.cpp
-    constant-pool/Item.cpp
-    constant-pool/Long.cpp
-    constant-pool/Manager.cpp
-    constant-pool/MethodRefInfo.cpp
-    constant-pool/NameAndType.cpp
-    constant-pool/RefInfo.cpp
-    constant-pool/StringInfo.cpp
-    constant-pool/Utf8.cpp
+    ConstantPool/ClassInfo.cpp
+    ConstantPool/Double.cpp
+    ConstantPool/Float.cpp
+    ConstantPool/FieldRefInfo.cpp
+    ConstantPool/Integer.cpp
+    ConstantPool/InterfaceMethodRefInfo.cpp
+    ConstantPool/Long.cpp
+    ConstantPool/Manager.cpp
+    ConstantPool/MethodRefInfo.cpp
+    ConstantPool/NameAndType.cpp
+    ConstantPool/RefInfo.cpp
+    ConstantPool/StringInfo.cpp
+    ConstantPool/Utf8.cpp
     )
 target_include_directories(espresso-class-parser-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(espresso-class-parser-static PRIVATE cxx_auto_type)
