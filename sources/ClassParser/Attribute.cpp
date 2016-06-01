@@ -15,8 +15,8 @@ Attribute::Attribute(ConstantPool::Manager & cpool, DataStream & data) {
     name_ = (const char *)cpool.itemForIndex<ConstantPool::Utf8>(name);
 
     auto length = data.readU32();
-    bytes_ = data.readBytes(length);
-    if (!bytes_) {
+    data_ = data.readBytes(length);
+    if (data_.reachedEOS()) {
         message = "Invalid attribute length";
         return;
     }

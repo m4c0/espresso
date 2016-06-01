@@ -7,6 +7,8 @@ namespace Espresso {
     namespace ClassParser {
         class DataStream {
         public:
+            DataStream() : buffer(0), remaining(0) {
+            }
             DataStream(const char * data, int len) {
                 buffer = data;
                 remaining = len;
@@ -34,11 +36,11 @@ namespace Espresso {
                 return (readU16() << 16) | readU16();
             }
 
-            const uint8_t * readBytes(int len) {
-                if (remaining < len) return 0;
-                const uint8_t * ptr = (const uint8_t *)buffer;
+            DataStream readBytes(int len) {
+                if (remaining < len) return DataStream();
+                const char * ptr = buffer;
                 buffer += len;
-                return ptr;
+                return DataStream(ptr, len);
             }
         private:
             const char * buffer;

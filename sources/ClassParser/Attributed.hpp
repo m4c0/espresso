@@ -9,7 +9,7 @@ namespace Espresso {
     namespace ClassParser {
         class Attributed : public Failable {
         public:
-            const uint8_t * code() const {
+            DataStream code() const {
                 return code_;
             }
 
@@ -17,7 +17,7 @@ namespace Espresso {
             bool parseAttributes(ConstantPool::Manager & cpool, DataStream & data);
 
         private:
-            const uint8_t * code_;
+            DataStream code_;
         };
     };
 };

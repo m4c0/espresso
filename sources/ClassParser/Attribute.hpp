@@ -11,12 +11,16 @@ namespace Espresso {
         public:
             Attribute(ConstantPool::Manager & cpool, DataStream & data);
 
-            const char *    name()  const { return name_; }
-            const uint8_t * bytes() const { return bytes_; }
+            const char * name() const {
+                return name_;
+            }
+            DataStream data() const {
+                return data_;
+            }
 
         private:
             const char * name_;
-            const uint8_t * bytes_;
+            DataStream data_;
         };
     };
 };

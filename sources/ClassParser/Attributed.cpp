@@ -15,7 +15,7 @@ bool Attributed::parseAttributes(ConstantPool::Manager & cpool, DataStream & dat
             return false;
         }
         if (strcmp(attr.name(), "Code") == 0) {
-            code_ = attr.bytes();
+            code_ = attr.data();
         }
     }
     return true;
