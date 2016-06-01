@@ -25,6 +25,31 @@ Have you ever tried to embed a JVM inside another process? I'm not talking about
 + Compilation will be managed by CMake (sorry, Autoconf fans).
 + I'm avoiding all kind of dependencies (except libjit), to keep a small footprint (that may also helps if someone eventually wants to embed this on a limited device). This does not apply to unit tests, though. Example: I use STD for testing, but you are gonna see some funky code for basic stuff on libraries' code.
 
+## Milestones
+
+### "Hello, world"
+
++   *Objective:* Run the smallest piece of code that can give back any kind of output
++   *Example Code:*
+        public class Example {
+            public static void main(String a[]) {
+                System.out.println("Hello World");
+            }
+        }
++   *Expected New Features:*
+    + Read a class file
+    + Read Java bytecodes
+    + JIT
+    + Possibly reflection, to retrieve a method by name/signature
+    + Invoke JIT method
+    + Call VM from Java (ex: translate `println` into `printf`)
+    + Create a wrapper for System
+    + Create a wrapper for PrintWriter
+    + Create a wrapper for String
+    + Create a wrapper for Object
++   *Caveats:*
+    + This is a huge step for a first milestone. Maybe we need to split this, but how?
+
 ## Disclaimer
 
 This project (and myself) are not at all related to Oracle. This is also not Java, since this is a Trademark of Oracle. I also take no responsability for damages or lack of features.
