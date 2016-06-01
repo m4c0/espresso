@@ -13,6 +13,8 @@ namespace Espresso {
                 ~Manager();
 
                 const Item * const * operator[](int idx) const;
+
+                bool itemMatchesTag(int idx, int type) const;
             private:
                 Item ** items;
                 int size;

@@ -10,6 +10,10 @@ namespace Espresso {
             public:
                 Item() : Failable(), tag(0) {}
                 Item(int tag) : Failable(), tag(tag) {}
+
+                bool matchesTag(int tag) const {
+                    return tag == this->tag;
+                }
             private:
                 const int tag;
             };

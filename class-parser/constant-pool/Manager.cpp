@@ -91,6 +91,11 @@ Manager::~Manager() {
     delete[] items;
 }
 
+bool Manager::itemMatchesTag(int idx, int type) const {
+    auto item = (*this)[idx];
+    return item && (*item)->matchesTag(type);
+}
+
 const Item * const * Manager::operator[](int idx) const {
     if (idx < 1) return 0;
     if (idx > size) return 0;

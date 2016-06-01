@@ -38,15 +38,24 @@ Class::Class(const char * buffer, int len) {
     }
 
     auto thisClass = data.readU16();
-    if (!thisClass || !cpool[thisClass]) { // TODO: check if cpool agrees
+    if (!cpool.itemMatchesTag(thisClass, 7)) { // TODO: improve those tag constants
         message = "Invalid class";
         return;
     }
 
     auto superClass = data.readU16();
-    if (!superClass || !cpool[superClass]) { // TODO: check if cpool agrees
+    if (!cpool.itemMatchesTag(superClass, 7)) { // TODO: improve those tag constants
         message = "Invalid super class";
         return;
+    }
+
+    auto ifaceCount = data.readU16();
+    for (int i = 0; i < ifaceCount; i++) {
+        auto ifaceIdx = data.readU16();
+        if (!cpool.itemMatchesTag(ifaceIdx, 7)) { // TODO: improve those tag constants
+            message = "Invalid interface for class";
+            return;
+        }
     }
 
     message = 0;
