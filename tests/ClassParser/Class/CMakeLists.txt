@@ -1,7 +1,7 @@
 add_executable(espresso-classparser-class-testdriver driver.cpp)
 target_compile_features(espresso-classparser-class-testdriver PRIVATE cxx_auto_type)
-target_link_libraries(espresso-classparser-class-testdriver PUBLIC espresso-class-parser)
-set_target_properties(espresso-classparser-class-testdriver PROPERTIES FOLDER "tests/class-parser")
+target_link_libraries(espresso-classparser-class-testdriver PUBLIC espresso-classparser)
+set_target_properties(espresso-classparser-class-testdriver PROPERTIES FOLDER "tests/ClassParser/Class")
 
 file(GLOB TEST_FILES "*.class")
 foreach(TEST_FILE ${TEST_FILES})

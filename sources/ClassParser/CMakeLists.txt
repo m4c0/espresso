@@ -1,4 +1,4 @@
-add_library(espresso-class-parser-static STATIC
+add_library(espresso-classparser-static STATIC
     Attribute.cpp
     Attributed.cpp
     Class.cpp
@@ -20,10 +20,10 @@ add_library(espresso-class-parser-static STATIC
     ConstantPool/StringInfo.cpp
     ConstantPool/Utf8.cpp
     )
-target_include_directories(espresso-class-parser-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_compile_features(espresso-class-parser-static PRIVATE cxx_auto_type)
-set_target_properties(espresso-class-parser-static PROPERTIES OUTPUT_NAME espresso-class-parser)
+target_include_directories(espresso-classparser-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(espresso-classparser-static PRIVATE cxx_auto_type)
+set_target_properties(espresso-classparser-static PROPERTIES OUTPUT_NAME espresso-classparser)
 
-add_library(espresso-class-parser SHARED)
-target_link_libraries(espresso-class-parser PUBLIC espresso-class-parser-static)
+add_library(espresso-classparser SHARED)
+target_link_libraries(espresso-classparser PUBLIC espresso-classparser-static)
 
