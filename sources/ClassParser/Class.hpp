@@ -4,12 +4,28 @@
 #include "Attributed.hpp"
 #include "Failable.hpp"
 
+#if USE_CPP_STL
+#include <fstream>
+#include <string>
+#endif
+
 namespace Espresso {
     namespace ClassParser {
         class Class : public Attributed {
         public:
             Class(const char * data, int len);
-            ~Class();
+
+        private:
+            void loadClass(const char * data, int len);
+
+#if USE_CPP_STL
+        public:
+            Class(const char * filename);
+            Class(std::string filename);
+            Class(std::ifstream & file);
+        private:
+            void loadClass(std::ifstream & file);
+#endif
         };
     };
 };

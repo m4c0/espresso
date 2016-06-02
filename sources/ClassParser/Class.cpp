@@ -7,7 +7,41 @@
 
 using namespace Espresso::ClassParser;
 
+#if USE_CPP_STL
+Class::Class(const char * filename) {
+    std::ifstream in(filename, std::ios::in | std::ios::binary);
+    loadClass(in);
+}
+Class::Class(std::string filename) {
+    std::ifstream in(filename, std::ios::in | std::ios::binary);
+    loadClass(in);
+}
+Class::Class(std::ifstream & in) {
+    loadClass(in);
+}
+
+void Class::loadClass(std::ifstream & in) {
+    if (!in) {
+        message = "File not found";
+        return;
+    }
+
+    in.seekg(0, std::ios::end);
+    auto size = in.tellg();
+
+    auto buffer = new char[size];
+    in.seekg(0, std::ios::beg);
+    in.read(buffer, size);
+    loadClass(buffer, size);
+    delete buffer;
+}
+#endif
+
 Class::Class(const char * buffer, int len) {
+    loadClass(buffer, len);
+}
+
+void Class::loadClass(const char * buffer, int len) {
     auto data = DataStream(buffer, len);
 
     auto magic = data.readU32();
@@ -81,7 +115,5 @@ Class::Class(const char * buffer, int len) {
     if (parseAttributes(cpool, data)) {
         message = 0;
     }
-}
-Class::~Class() {
 }
 

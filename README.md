@@ -23,7 +23,7 @@ Have you ever tried to embed a JVM inside another process? I'm not talking about
 + I will throw JNI out of the window. Interface with this VM will be simpler and not related at all to JNI.
 + Code will be fully JIT'ed with [https://www.gnu.org/software/dotgnu/libjit-doc/libjit_toc.html](libjit). There'll be no interpreter at all - this will probably slow loadings, but have faster runtime (and overall code will be cleaner).
 + Compilation will be managed by CMake (sorry, Autoconf fans).
-+ I'm avoiding all kind of dependencies (except libjit), to keep a small footprint (that may also helps if someone eventually wants to embed this on a limited device). This does not apply to unit tests, though. Example: I use STD for testing, but you are gonna see some funky code for basic stuff on libraries' code.
++ I'm avoiding all kind of dependencies (except libjit), to keep a small footprint (that may also helps if someone eventually wants to embed this on a limited device). Exceptions may be made as an optional parameters, as long as they don't become a mandatory requirement.
 
 ## Milestones
 
