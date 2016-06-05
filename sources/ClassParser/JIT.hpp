@@ -9,8 +9,13 @@ namespace Espresso {
         class JIT : public Failable {
         public:
             JIT(DataStream data);
+            JIT(DataStream data, int stackSize);
 
-            void * createFunction();
+            void * function() {
+                return function_;
+            }
+        private:
+            void * function_;
         };
     };
 };

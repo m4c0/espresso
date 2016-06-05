@@ -42,7 +42,7 @@ int main(int argc, char ** argv) {
             return 6;
         }
 
-        void (*fn)() = (void (*)())jit.createFunction();
+        void (*fn)() = (void (*)())jit.function();
         if (!fn) return 7;
 
         method++;

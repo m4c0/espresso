@@ -1,4 +1,4 @@
-file(GLOB TEST_FILES "method-*.cpp")
+file(GLOB TEST_FILES "[0-9]*.cpp")
 foreach(TEST_FILE ${TEST_FILES})
     get_filename_component(TEST_WE ${TEST_FILE} NAME_WE)
     set(TEST_NAME classparser-jit-${TEST_WE})

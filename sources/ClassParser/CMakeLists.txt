@@ -1,3 +1,8 @@
+find_library(JIT jit)
+if(NOT EXISTS ${JIT})
+    message(FATAL_ERROR "libjit not found")
+endif()
+
 add_library(espresso-classparser-static STATIC
     Attribute.cpp
     Attributed.cpp
@@ -27,4 +32,5 @@ set_target_properties(espresso-classparser-static PROPERTIES OUTPUT_NAME espress
 
 add_library(espresso-classparser SHARED)
 target_link_libraries(espresso-classparser PUBLIC espresso-classparser-static)
+target_link_libraries(espresso-classparser PUBLIC ${JIT})
 

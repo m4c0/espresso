@@ -6,7 +6,7 @@ int main() {
     JIT jit(DataStream("\xb1", 1));
     if (!jit) return 1;
 
-    void (*fn)() = (void(*)())jit.createFunction();
+    void (*fn)() = (void(*)())jit.function();
     if (!fn) return 2;
 
     fn(); // Let's just test if it blow up
