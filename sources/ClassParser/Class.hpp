@@ -3,6 +3,7 @@
 
 #include "Attributed.hpp"
 #include "Failable.hpp"
+#include "Method.hpp"
 
 #if USE_CPP_STL
 #include <fstream>
@@ -15,8 +16,13 @@ namespace Espresso {
         public:
             Class(const char * data, int len);
 
+            const Method * methods() const {
+                return methods_;
+            }
         private:
             void loadClass(const char * data, int len);
+
+            Method * methods_;
 
 #if USE_CPP_STL
         public:

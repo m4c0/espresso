@@ -1,12 +1,22 @@
 #include "ClassEntry.hpp"
 
+#include "ConstantPool/Utf8.hpp"
+
 using namespace Espresso::ClassParser;
 
-// TODO: Eventually do something with this
+ClassEntry::ClassEntry() {
+    message = "Empty class entry";
+}
+
 ClassEntry::ClassEntry(ConstantPool::Manager & cpool, DataStream & data) {
     auto access = data.readU16();
 
     auto name = data.readU16();
+    if (!cpool.itemMatchesTag(name, 1)) {
+        message = "Invalid entry name";
+        return;
+    }
+    name_ = cpool.itemForIndex<ConstantPool::Utf8>(name);
 
     auto descriptor = data.readU16();
 

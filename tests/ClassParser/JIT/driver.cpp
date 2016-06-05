@@ -1,4 +1,5 @@
 #include "Class.hpp"
+#include "JIT.hpp"
 #include "Logger.hpp"
 
 #include <cstdio>
@@ -27,6 +28,26 @@ int main(int argc, char ** argv) {
         std::cerr << cls.error() << std::endl;
         return 3;
     }
+
+    auto method = cls.methods();
+    if (!method) return 4;
+    if (!*method) {
+        std::cerr << method->error() << std::endl;
+        return 5;
+    }
+    while (*method) {
+        Espresso::ClassParser::JIT jit(method->code());
+        if (!jit) {
+            std::cerr << method->name() << ": " << jit.error() << std::endl;
+            return 6;
+        }
+
+        void (*fn)() = (void (*)())jit.createFunction();
+        if (!fn) return 7;
+
+        method++;
+    }
+
     return 0;
 }
 

@@ -5,12 +5,13 @@ find_package(Java COMPONENTS Development)
 function(espresso_java_test FOLDER TEST_WE DEBUG_FLAG)
     set(SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/${TEST_WE}.java")
     set(BINARY "${CMAKE_CURRENT_BINARY_DIR}/${TEST_WE}.class")
+    set(TEST_NAME ${FOLDER}-${TEST_WE})
     add_custom_command(
         OUTPUT ${BINARY}
         MAIN_DEPENDENCY ${SOURCE}
         COMMAND "${Java_JAVAC_EXECUTABLE}" ${DEBUG_FLAG} -d "${CMAKE_CURRENT_BINARY_DIR}" ${SOURCE})
-    add_test(${FOLDER}-${TEST_WE} espresso-${FOLDER}-testdriver ${BINARY})
-    add_custom_target(espresso-${FOLDER}-${TEST_WE} ALL DEPENDS ${BINARY})
+    add_test(${TEST_NAME} espresso-${FOLDER}-testdriver ${BINARY})
+    add_custom_target(espresso-${TEST_NAME} ALL DEPENDS ${BINARY})
 endfunction()
 
 add_subdirectory(ClassParser)

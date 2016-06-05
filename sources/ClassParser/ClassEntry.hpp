@@ -10,7 +10,14 @@ namespace Espresso {
     namespace ClassParser {
         class ClassEntry : public Attributed {
         public:
+            ClassEntry();
             ClassEntry(ConstantPool::Manager & cpool, DataStream & data);
+
+            const char * name() const {
+                return name_;
+            }
+        private:
+            const char * name_;
         };
     };
 };

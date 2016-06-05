@@ -104,10 +104,11 @@ void Class::loadClass(const char * buffer, int len) {
     }
 
     auto methodCount = data.readU16();
+    methods_ = new Method[methodCount + 1]; // Last one works as a "end" marker
     for (int i = 0; i < methodCount; i++) {
-        auto method = Method(cpool, data);
-        if (!method) {
-            message = method.error();
+        methods_[i] = Method(cpool, data);
+        if (!methods_[i]) {
+            message = methods_[i].error();
             return;
         }
     }

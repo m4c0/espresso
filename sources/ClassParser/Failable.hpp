@@ -4,13 +4,13 @@
 namespace Espresso {
     class Failable {
     public:
-        operator bool() {
+        operator bool() const {
             return message == 0;
         }
-        bool operator !() {
+        bool operator !() const {
             return message != 0;
         }
-        const char * error() {
+        const char * error() const {
             return message;
         }
     protected:

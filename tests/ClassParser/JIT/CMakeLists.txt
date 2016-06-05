@@ -6,7 +6,6 @@ set_target_properties(espresso-classparser-jit-testdriver PROPERTIES FOLDER "tes
 file(GLOB TEST_FILES "*.java")
 foreach(TEST_FILE ${TEST_FILES})
     get_filename_component(TEST_WE ${TEST_FILE} NAME_WE)
-    espresso_java_test(classparser-jit ${TEST_WE} -g)
+    espresso_java_test(classparser-jit ${TEST_WE} -g:none)
 endforeach()
-
 

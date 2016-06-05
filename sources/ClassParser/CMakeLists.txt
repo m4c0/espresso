@@ -4,6 +4,7 @@ add_library(espresso-classparser-static STATIC
     Class.cpp
     ClassEntry.cpp
     Field.cpp
+    JIT.cpp
     Method.cpp
     Logger.cpp
     ConstantPool/ClassInfo.cpp

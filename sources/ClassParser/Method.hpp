@@ -8,6 +8,7 @@ namespace Espresso {
     namespace ClassParser {
         class Method : public ClassEntry {
         public:
+            Method();
             Method(ConstantPool::Manager & cpool, DataStream & data);
         };
     };
