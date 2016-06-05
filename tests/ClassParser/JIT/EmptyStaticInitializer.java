@@ -1,0 +1,4 @@
+class EmptyStaticInitializer {
+    static {
+    }
+}
