@@ -3,7 +3,9 @@
 using namespace Espresso::ClassParser;
 
 int main() {
-    auto jit = JIT().dataStream(DataStream("\x05\xac", 2)); // iconst_2; ireturn
+    auto jit = JIT()
+        .dataStream(DataStream("\x05\xac", 2)) // iconst_2; ireturn
+        .returnType(JIT::Int);
     if (!jit) return 1;
 
     int (*fn)() = (int(*)())jit.buildFunction();

@@ -16,12 +16,17 @@ static __attribute__((destructor)) void _cleanup_libjit() {
 }
 
 JIT::JIT() {
+    returnType_ = Void;
     stackSize_ = 256;
     message = 0;
 }
 
 JIT & JIT::dataStream(DataStream data) {
     data_ = data;
+    return *this;
+}
+JIT & JIT::returnType(Type type) {
+    returnType_ = type;
     return *this;
 }
 JIT & JIT::stackSize(int size) {
@@ -32,7 +37,13 @@ JIT & JIT::stackSize(int size) {
 void * JIT::buildFunction() {
     jit_context_build_start(_context);
 
-    auto signature = jit_type_create_signature(jit_abi_cdecl, jit_type_int, 0, 0, 0);
+    jit_type_t ret;
+    switch (returnType_) {
+        case Void: ret = jit_type_void; break;
+        case Int:  ret = jit_type_int; break;
+    }
+
+    auto signature = jit_type_create_signature(jit_abi_cdecl, ret, 0, 0, 0);
     auto function = jit_function_create(_context, signature);
 
     auto stack = new jit_value_t[stackSize_];

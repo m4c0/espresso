@@ -8,14 +8,18 @@ namespace Espresso {
     namespace ClassParser {
         class JIT : public Failable {
         public:
+            typedef enum { Int, Void } Type;
+
             JIT();
 
             JIT & dataStream(DataStream data);
+            JIT & returnType(Type type); 
             JIT & stackSize(int size);
 
             void * buildFunction();
         private:
             DataStream data_;
+            Type returnType_;
             int stackSize_;
         };
     };
