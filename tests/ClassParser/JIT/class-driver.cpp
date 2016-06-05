@@ -36,13 +36,14 @@ int main(int argc, char ** argv) {
         return 5;
     }
     while (*method) {
-        Espresso::ClassParser::JIT jit(method->code());
+        auto jit = Espresso::ClassParser::JIT();
+        jit.dataStream(method->code());
         if (!jit) {
             std::cerr << method->name() << ": " << jit.error() << std::endl;
             return 6;
         }
 
-        void (*fn)() = (void (*)())jit.function();
+        void (*fn)() = (void (*)())jit.buildFunction();
         if (!fn) return 7;
 
         method++;

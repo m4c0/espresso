@@ -15,20 +15,31 @@ static __attribute__((destructor)) void _cleanup_libjit() {
     jit_context_destroy(_context);
 }
 
-JIT::JIT(DataStream data) : JIT(data, 256) {
+JIT::JIT() {
+    stackSize_ = 256;
+    message = 0;
 }
 
-JIT::JIT(DataStream data, int stackSize) {
+JIT & JIT::dataStream(DataStream data) {
+    data_ = data;
+    return *this;
+}
+JIT & JIT::stackSize(int size) {
+    stackSize_ = size;
+    return *this;
+}
+
+void * JIT::buildFunction() {
     jit_context_build_start(_context);
 
     auto signature = jit_type_create_signature(jit_abi_cdecl, jit_type_int, 0, 0, 0);
     auto function = jit_function_create(_context, signature);
 
-    auto stack = new jit_value_t[stackSize];
+    auto stack = new jit_value_t[stackSize_];
     auto stackPos = 0; // TODO: Add overrun and underrun checks
 
-    while (!data.reachedEOS()) {
-        auto opcode = data.readU8();
+    while (!data_.reachedEOS()) {
+        auto opcode = data_.readU8();
         switch (opcode) {
             case 2: // iconst_m1
             case 3: // iconst_0
@@ -52,7 +63,6 @@ JIT::JIT(DataStream data, int stackSize) {
     jit_function_compile(function);
     jit_context_build_end(_context);
 
-    function_ = jit_function_to_closure(function);
-    message = 0;
+    return jit_function_to_closure(function);
 }
 

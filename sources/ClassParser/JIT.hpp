@@ -8,14 +8,15 @@ namespace Espresso {
     namespace ClassParser {
         class JIT : public Failable {
         public:
-            JIT(DataStream data);
-            JIT(DataStream data, int stackSize);
+            JIT();
 
-            void * function() {
-                return function_;
-            }
+            JIT & dataStream(DataStream data);
+            JIT & stackSize(int size);
+
+            void * buildFunction();
         private:
-            void * function_;
+            DataStream data_;
+            int stackSize_;
         };
     };
 };
