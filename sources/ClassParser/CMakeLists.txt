@@ -4,7 +4,6 @@ if(NOT EXISTS ${JIT})
 endif()
 
 add_library(espresso-classparser-static STATIC
-    Attribute.cpp
     Attributed.cpp
     Class.cpp
     ClassEntry.cpp
@@ -12,6 +11,8 @@ add_library(espresso-classparser-static STATIC
     JIT.cpp
     Method.cpp
     Logger.cpp
+    Attribute/Base.cpp
+    Attribute/Code.cpp
     ConstantPool/ClassInfo.cpp
     ConstantPool/Double.cpp
     ConstantPool/Float.cpp

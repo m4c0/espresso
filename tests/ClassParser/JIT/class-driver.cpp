@@ -36,8 +36,12 @@ int main(int argc, char ** argv) {
         return 5;
     }
     while (*method) {
-        auto jit = Espresso::ClassParser::JIT();
-        jit.dataStream(method->code());
+        auto code = method->code();
+        if (!code) {
+            std::cerr << method->name() << ": " << code.error() << std::endl;
+            return 6;
+        }
+        auto jit = code.code();
         if (!jit) {
             std::cerr << method->name() << ": " << jit.error() << std::endl;
             return 6;

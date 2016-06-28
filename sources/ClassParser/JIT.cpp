@@ -1,5 +1,7 @@
 #include "JIT.hpp"
 
+#include "Logger.hpp"
+
 #include <jit/jit.h>
 #include <jit/jit-dump.h>
 #include <stdio.h>
@@ -17,12 +19,17 @@ static __attribute__((destructor)) void _cleanup_libjit() {
 
 JIT::JIT() {
     returnType_ = Void;
-    stackSize_ = 256;
+    stackSize_ = 65535;
+    maxLocals_ = 65535;
     message = 0;
 }
 
 JIT & JIT::dataStream(DataStream data) {
     data_ = data;
+    return *this;
+}
+JIT & JIT::maxLocals(int locals) {
+    maxLocals_ = locals;
     return *this;
 }
 JIT & JIT::returnType(Type type) {
@@ -67,6 +74,10 @@ void * JIT::buildFunction() {
             case 177: // return
                 jit_insn_default_return(function);
                 break;
+            default:
+                if (Espresso::Log) Espresso::Log("Unknown opcode: %02x", opcode);
+                message = "Unknown/unsupported opcode";
+                return 0;
         }
     }
 

@@ -13,6 +13,7 @@ namespace Espresso {
             JIT();
 
             JIT & dataStream(DataStream data);
+            JIT & maxLocals(int size);
             JIT & returnType(Type type); 
             JIT & stackSize(int size);
 
@@ -21,6 +22,7 @@ namespace Espresso {
             DataStream data_;
             Type returnType_;
             int stackSize_;
+            int maxLocals_;
         };
     };
 };
