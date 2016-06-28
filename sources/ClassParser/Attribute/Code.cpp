@@ -17,7 +17,7 @@ Code::Code(ConstantPool::Manager & cpool, DataStream & data) : Base("Code") {
     }
     code_.dataStream(codeBytes);
 
-    length = data.readU32();
+    length = data.readU16();
     data.readBytes(length * 8); // Just shamelessly skip the exception table for now
 
     if (!parseAttributes(cpool, data)) return;

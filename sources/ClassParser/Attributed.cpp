@@ -29,7 +29,7 @@ bool Attributed::parseAttributes(ConstantPool::Manager & cpool, DataStream & dat
         auto length = data.readU32();
         auto value = data.readBytes(length);
         if (value.reachedEOS()) {
-            message = name;
+            message = "Invalid attribute length";
             return false;
         }
 
