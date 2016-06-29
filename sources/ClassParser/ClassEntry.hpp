@@ -13,11 +13,14 @@ namespace Espresso {
             ClassEntry();
             ClassEntry(ConstantPool::Manager & cpool, DataStream & data);
 
+            bool isAbstract() const;
+
             const char * name() const {
                 return name_;
             }
         private:
             const char * name_;
+            int access_;
         };
     };
 };

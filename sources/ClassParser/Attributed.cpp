@@ -7,6 +7,9 @@
 
 using namespace Espresso::ClassParser;
 
+Attributed::Attributed() : attributes(0) {
+}
+
 Attributed::~Attributed() {
     if (attributes) delete[] attributes;
 }
@@ -36,8 +39,8 @@ bool Attributed::parseAttributes(ConstantPool::Manager & cpool, DataStream & dat
         if (strcmp(name, "Code") == 0) {
             attributes[i] = new Attribute::Code(cpool, value);
         } else {
-            message = "Invalid attribute";
-            return false;
+            //message = "Invalid attribute";
+            //return false;
         }
     }
     return true;

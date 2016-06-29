@@ -10,6 +10,7 @@ namespace Espresso {
     namespace ClassParser {
         class Attributed : public Failable {
         public:
+            Attributed();
             virtual ~Attributed();
 
             template<class T>

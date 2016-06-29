@@ -9,7 +9,7 @@ ClassEntry::ClassEntry() {
 }
 
 ClassEntry::ClassEntry(ConstantPool::Manager & cpool, DataStream & data) {
-    auto access = data.readU16();
+    access_ = data.readU16();
 
     auto name = data.readU16();
     if (!cpool.itemMatchesTag(name, 1)) {
@@ -23,5 +23,9 @@ ClassEntry::ClassEntry(ConstantPool::Manager & cpool, DataStream & data) {
     if (parseAttributes(cpool, data)) {
         message = 0;
     }
+}
+
+bool ClassEntry::isAbstract() const {
+    return (access_ & 0x400) != 0;
 }
 
