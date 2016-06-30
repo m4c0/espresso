@@ -3,6 +3,7 @@
 #include "DataStream.hpp"
 #include "Field.hpp"
 #include "Method.hpp"
+#include "ConstantPool/ClassInfo.hpp"
 #include "ConstantPool/Manager.hpp"
 
 using namespace Espresso::ClassParser;
@@ -76,6 +77,13 @@ void Class::loadClass(const char * buffer, int len) {
     auto thisClass = data.readU16();
     if (!cpool.itemMatchesTag(thisClass, 7)) { // TODO: improve those tag constants
         message = "Invalid class";
+        return;
+    }
+
+    auto classInfo = cpool.itemForIndex<ConstantPool::ClassInfo>(thisClass);
+    name_ = classInfo.className(cpool);
+    if (!name_) {
+        message = "Invalid class name at class info";
         return;
     }
 

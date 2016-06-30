@@ -11,8 +11,10 @@ namespace Espresso {
             class ClassInfo : public Item {
             public:
                 ClassInfo(Manager & mgr, DataStream & data);
+
+                const char * className(Manager & mgr) const;
             private:
-                const Item * const * className;
+                int className_;
             };
         };
     };

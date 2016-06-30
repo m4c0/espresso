@@ -16,12 +16,16 @@ namespace Espresso {
         public:
             Class(const char * data, int len);
 
+            const char * name() const {
+                return name_;
+            }
             const Method * methods() const {
                 return methods_;
             }
         private:
             void loadClass(const char * data, int len);
 
+            const char * name_;
             Method * methods_;
 
 #if USE_CPP_STL
