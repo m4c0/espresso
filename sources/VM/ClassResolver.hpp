@@ -7,8 +7,8 @@ namespace Espresso {
     namespace VM {
         class ClassResolver {
         public:
-            void addClass(Class::Base & cls);
-            Class::Base & findClass(const char * name);
+            void addClass(Class::Base * cls);
+            Class::Base * findClass(const char * name);
         };
     };
 };

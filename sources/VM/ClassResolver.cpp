@@ -2,6 +2,6 @@
 
 using namespace Espresso::VM;
 
-void ClassResolver::addClass(Class::Base & cls) {
+void ClassResolver::addClass(Class::Base * cls) {
 }
 
