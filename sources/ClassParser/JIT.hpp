@@ -17,7 +17,7 @@ namespace Espresso {
             JIT & returnType(Type type); 
             JIT & stackSize(int size);
 
-            void * buildFunction();
+            void * buildFunction() const;
         private:
             DataStream data_;
             Type returnType_;

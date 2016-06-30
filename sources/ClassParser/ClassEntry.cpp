@@ -19,6 +19,11 @@ ClassEntry::ClassEntry(ConstantPool::Manager & cpool, DataStream & data) {
     name_ = cpool.itemForIndex<ConstantPool::Utf8>(name);
 
     auto descriptor = data.readU16();
+    if (!cpool.itemMatchesTag(descriptor, 1)) {
+        message = "Invalid entry descriptor";
+        return;
+    }
+    descriptor_ = cpool.itemForIndex<ConstantPool::Utf8>(descriptor);
 
     if (parseAttributes(cpool, data)) {
         message = 0;

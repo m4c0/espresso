@@ -15,11 +15,15 @@ namespace Espresso {
 
             bool isAbstract() const;
 
+            const char * descriptor() const {
+                return descriptor_;
+            }
             const char * name() const {
                 return name_;
             }
         private:
             const char * name_;
+            const char * descriptor_;
             int access_;
         };
     };

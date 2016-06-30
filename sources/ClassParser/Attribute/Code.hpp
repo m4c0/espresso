@@ -14,7 +14,7 @@ namespace Espresso {
                 Code();
                 Code(ConstantPool::Manager & cpool, DataStream & data);
 
-                JIT code() const { return code_; }
+                void * code() const { return code_.buildFunction(); }
 
             private:
                 JIT code_;

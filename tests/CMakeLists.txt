@@ -12,8 +12,9 @@ function(espresso_java_test FOLDER TEST_WE DEBUG_FLAG)
         OUTPUT ${BINARY}
         MAIN_DEPENDENCY ${SOURCE}
         COMMAND "${Java_JAVAC_EXECUTABLE}" ${DEBUG_FLAG} -d "${CMAKE_CURRENT_BINARY_DIR}" ${SOURCE})
-    add_test(${TEST_NAME} espresso-${FOLDER}-testdriver ${BINARY})
+    add_test(${TEST_NAME} espresso-${FOLDER}-testdriver ${BINARY} ${ARGN})
     add_custom_target(espresso-${TEST_NAME} ALL DEPENDS ${BINARY})
+    set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 4)
 endfunction()
 
 function(espresso_run_cpp_tests TEST_INFIX TEST_LIB TEST_SUBFOLDER)
@@ -29,6 +30,7 @@ function(espresso_run_cpp_tests TEST_INFIX TEST_LIB TEST_SUBFOLDER)
         set_target_properties(${TEST} PROPERTIES FOLDER "tests/${TEST_SUBFOLDER}")
 
         add_test(${TEST_NAME} ${TEST})
+        set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 4)
     endforeach()
 endfunction()
 

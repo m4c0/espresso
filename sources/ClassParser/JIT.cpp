@@ -41,7 +41,7 @@ JIT & JIT::stackSize(int size) {
     return *this;
 }
 
-void * JIT::buildFunction() {
+void * JIT::buildFunction() const {
     jit_context_build_start(_context);
 
     jit_type_t ret;
@@ -56,8 +56,9 @@ void * JIT::buildFunction() {
     auto stack = new jit_value_t[stackSize_];
     auto stackPos = 0; // TODO: Add overrun and underrun checks
 
-    while (!data_.reachedEOS()) {
-        auto opcode = data_.readU8();
+    DataStream data = data_;
+    while (!data.reachedEOS()) {
+        auto opcode = data.readU8();
         switch (opcode) {
             case 2: // iconst_m1
             case 3: // iconst_0
@@ -76,11 +77,14 @@ void * JIT::buildFunction() {
                 break;
             default:
                 if (Espresso::Log) Espresso::Log("Unknown opcode: %02x", opcode);
-                message = "Unknown/unsupported opcode";
-                return 0;
+
+                //jit_context_build_end(_context);
+                //message = "Unknown/unsupported opcode";
+                //return 0;
         }
     }
 
+#warning "do a '#if DEBUG' or something"
     jit_dump_function(stderr, function, 0);
     jit_function_compile(function);
     jit_context_build_end(_context);

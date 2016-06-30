@@ -12,7 +12,7 @@ namespace Espresso {
             Method();
             Method(ConstantPool::Manager & cpool, DataStream & data);
 
-            const Attribute::Code & code() const { return code_; }
+            void * code() const { return code_.code(); }
 
         private:
             Attribute::Code code_;
