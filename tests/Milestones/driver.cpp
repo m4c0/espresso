@@ -22,13 +22,20 @@ int main(int argc, char ** argv) {
     classdb.addClass(new Espresso::VM::Class::DlOpen("java/lang/System"));
 
     auto cls = Espresso::ClassParser::Class(argv[1]);
-    classdb.addClass(new Espresso::VM::Class::Parsed(cls));
+    if (!cls) {
+        std::cerr << argv[1] << " wasn't loaded: " << cls.error() << std::endl;
+        return 1;
+    }
+    auto pcls = new Espresso::VM::Class::Parsed(cls);
+    classdb.addClass(pcls);
 
-    // Remaining Tasks:
-    // 1. Pass CR to VM
-    // 2. Ask VM to init "argv[1]"
-    // 3. ...
-    // 4. Profit!
+    void (*fn)() = (void (*)())pcls->findMethod("<clinit>", "()V");
+    if (!fn) {
+        std::cerr << argv[1] << " does not contain <clinit>()V" << std::endl;
+        return 1;
+    }
+
+    fn();
 
     if (_result != 99) {
         std::cerr << "java/lang/System.exit(I)V was not properly called" << std::endl;
