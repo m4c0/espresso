@@ -78,6 +78,9 @@ void * JIT::buildFunction() const {
             case 10: // lconst_1
                 stack[stackPos++] = jit_value_create_long_constant(function, jit_type_long, opcode - 9);
                 break;
+            case 16: // bipush
+                stack[stackPos++] = jit_value_create_nint_constant(function, jit_type_nint, data.readU8());
+                break;
             case 172: // ireturn
             case 173: // lreturn
                 jit_insn_return(function, stack[--stackPos]);

@@ -24,5 +24,7 @@ int main() {
     if (!_test("\x06\xac", 2,  3)) return 5; // iconst_3;  ireturn
     if (!_test("\x07\xac", 2,  4)) return 6; // iconst_4;  ireturn
     if (!_test("\x08\xac", 2,  5)) return 7; // iconst_5;  ireturn
+
+    if (!_test("\x10\x63\xac", 3, 99)) return 8; // bipush 99; ireturn
 }
 

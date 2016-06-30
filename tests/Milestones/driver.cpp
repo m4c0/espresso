@@ -1,6 +1,7 @@
 #include "Class/DlOpen.hpp"
 #include "Class/Parsed.hpp"
 #include "ClassResolver.hpp"
+#include "Logger.hpp"
 
 #include <iostream>
 
@@ -11,11 +12,22 @@ extern "C" void ZN4java4lang6System4exitEi(int code) {
     _result = code;
 }
 
+static void _log(const char * fmt, ...) {
+    va_list va;
+    va_start(va, fmt);
+    vfprintf(stderr, fmt, va);
+    va_end(va);
+
+    std::cerr << std::endl;
+}
+
 int main(int argc, char ** argv) {
     if (argc != 2) {
         std::cerr << "Test must be called with the path to the test class" << std::endl;
         return 1;
     }
+
+    Espresso::Log = _log;
 
     auto classdb = Espresso::VM::ClassResolver();
     classdb.addClass(new Espresso::VM::Class::DlOpen("java/lang/Object"));
