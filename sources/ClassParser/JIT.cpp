@@ -24,6 +24,10 @@ JIT::JIT() {
     message = 0;
 }
 
+JIT & JIT::constantPool(ConstantPool::Manager * cpool) {
+    cpool_ = cpool;
+    return *this;
+}
 JIT & JIT::dataStream(DataStream data) {
     data_ = data;
     return *this;
@@ -47,6 +51,7 @@ void * JIT::buildFunction() const {
     jit_type_t ret;
     switch (returnType_) {
         case Void: ret = jit_type_void; break;
+        case Long: ret = jit_type_long; break;
         case Int:  ret = jit_type_int; break;
     }
 
@@ -69,7 +74,12 @@ void * JIT::buildFunction() const {
             case 8: // iconst_5
                 stack[stackPos++] = jit_value_create_nint_constant(function, jit_type_nint, opcode - 3);
                 break;
+            case 9:  // lconst_0
+            case 10: // lconst_1
+                stack[stackPos++] = jit_value_create_long_constant(function, jit_type_long, opcode - 9);
+                break;
             case 172: // ireturn
+            case 173: // lreturn
                 jit_insn_return(function, stack[--stackPos]);
                 break;
             case 177: // return
