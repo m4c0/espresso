@@ -7,8 +7,14 @@ namespace Espresso {
     namespace VM {
         class ClassResolver {
         public:
+            ClassResolver();
+
             void addClass(Class::Base * cls);
             Class::Base * findClass(const char * name);
+
+        private:
+            class Node;
+            Node * first_;
         };
     };
 };
