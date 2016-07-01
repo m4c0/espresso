@@ -10,7 +10,7 @@
 
 using namespace Espresso::ClassParser;
 
-Class::Class(const char * filename) {
+Class::Class(const char * filename) : cpool_(0) {
     FILE * file = fopen(filename, "r");
     if (!file) {
         message = "File not found";
@@ -33,7 +33,7 @@ Class::Class(const char * filename) {
     delete buffer;
 }
 
-Class::Class(const char * buffer, int len) {
+Class::Class(const char * buffer, int len) : cpool_(0) {
     loadClass(buffer, len);
 }
 
@@ -57,7 +57,8 @@ void Class::loadClass(const char * buffer, int len) {
         return;
     }
 
-    auto cpool = ConstantPool::Manager(data_);
+    cpool_ = new ConstantPool::Manager(data_);
+    ConstantPool::Manager & cpool = *cpool_;
     if (!cpool) {
         message = cpool.error();
         return;
@@ -119,5 +120,8 @@ void Class::loadClass(const char * buffer, int len) {
     if (parseAttributes(cpool, data_)) {
         message = 0;
     }
+}
+Class::~Class() {
+    if (cpool_) delete cpool_;
 }
 

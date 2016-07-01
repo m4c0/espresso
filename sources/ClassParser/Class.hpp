@@ -2,6 +2,7 @@
 #define __ESPRESSO_CLASS_H__
 
 #include "Attributed.hpp"
+#include "ConstantPool/Manager.hpp"
 #include "DataStream.hpp"
 #include "Failable.hpp"
 #include "Method.hpp"
@@ -12,6 +13,7 @@ namespace Espresso {
         public:
             Class(const char * filename);
             Class(const char * data, int len);
+            ~Class();
 
             const char * name() const {
                 return name_;
@@ -22,6 +24,7 @@ namespace Espresso {
         private:
             void loadClass(const char * data, int len);
 
+            ConstantPool::Manager * cpool_;
             DataStream data_;
             const char * name_;
             Method * methods_;

@@ -88,6 +88,18 @@ void * JIT::buildFunction() const {
             case 177: // return
                 jit_insn_default_return(function);
                 break;
+            case 184: { // invokestatic
+                auto index = data.readU16();
+                if (!cpool_) {
+                    if (Espresso::Log) Espresso::Log("Tried to JIT a invokestatic without a constant pool");
+                    return 0;
+                }
+                if (!cpool_->itemMatchesTag(index, 10)) {
+                    if (Espresso::Log) Espresso::Log("Tried to JIT a invokestatic using an invalid constant pool value at %d", index);
+                    return 0;
+                }
+                break;
+            }
             default:
                 if (Espresso::Log) Espresso::Log("Unknown opcode: %02x", opcode);
 

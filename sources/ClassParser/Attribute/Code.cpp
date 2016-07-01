@@ -6,6 +6,7 @@ Code::Code() : Base() {
     message = "Empty code";
 }
 Code::Code(ConstantPool::Manager & cpool, DataStream & data) : Base("Code") {
+    code_.constantPool(&cpool);
     code_.stackSize(data.readU16());
     code_.maxLocals(data.readU16());
 
