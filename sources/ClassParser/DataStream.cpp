@@ -8,11 +8,14 @@ using namespace Espresso::ClassParser;
 
 DataStream::DataStream() : buffer(0), remaining(0), original(0) {
 }
+DataStream::DataStream(const DataStream & copy) : original(0) {
+    *this = copy;
+}
 DataStream::DataStream(const char * data, int len) : original(0) {
     buffer = data;
     remaining = len;
 }
-DataStream::DataStream(const char * data, int len, bool copy) {
+DataStream::DataStream(const char * data, int len, bool copy) : original(0) {
     if (!copy) {
         buffer = data;
         remaining = len;
@@ -20,14 +23,25 @@ DataStream::DataStream(const char * data, int len, bool copy) {
         return;
     }
 
+    *this = DataStream(data, len);
+}
+DataStream::~DataStream() {
+    if (original) delete original;
+}
+
+DataStream & DataStream::operator=(const DataStream & copy) {
+    if (original) delete original;
+
+    const char * data = copy.buffer;
+    int len = copy.remaining;
+
     char * ptr = new char[len];
     memcpy(ptr, data, len);
 
     buffer = original = ptr;
     remaining = len;
-}
-DataStream::~DataStream() {
-    if (original) delete original;
+
+    return *this;
 }
 
 bool DataStream::reachedEOS() {

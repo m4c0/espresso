@@ -8,9 +8,12 @@ namespace Espresso {
         class DataStream {
         public:
             DataStream();
+            DataStream(const DataStream & copy);
             DataStream(const char * data, int len);
             DataStream(const char * data, int len, bool copy);
             ~DataStream();
+
+            DataStream & operator=(const DataStream & copy);
 
             bool reachedEOS();
 
