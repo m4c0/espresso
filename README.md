@@ -25,6 +25,20 @@ Have you ever tried to embed a JVM inside another process? I'm not talking about
 + Compilation will be managed by CMake (sorry, Autoconf fans).
 + I'm avoiding all kind of dependencies (except libjit), to keep a small footprint (that may also helps if someone eventually wants to embed this on a limited device). Exceptions may be made as an optional parameters, as long as they don't become a mandatory requirement.
 
+## Components (so far)
+
+### ClassParser
+
+Parses Oracle's [http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html][Java Class File Format], JIT'ng bytecodes into native code.
+
+### Blender
+
+Mix components together. Comes from the need of leaving components fully independent from each other. Example: VM contains a list of classes. Those can be artificially created ones (ex: using methods loaded with "dlopen"), but optionally, they can come from ClassParser. If we put this integration on ClassParser, this means one needs a VM for a project that only needs to parse classes (ex: some ahead-of-time compiler). If we put it on VM, this means we always need to add the Oracle's class support - which imposes extra-weight for projects that don't need it.
+
+### VM
+
+Contains the runtime. Currently, only contains a list of classes.
+
 ## Milestones
 
 ### "Hello, world"

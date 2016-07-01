@@ -1,5 +1,5 @@
 #include "Class/DlOpen.hpp"
-#include "Class/Parsed.hpp"
+#include "JVMClass.hpp"
 #include "ClassResolver.hpp"
 #include "Logger.hpp"
 
@@ -33,15 +33,14 @@ int main(int argc, char ** argv) {
     classdb.addClass(new Espresso::VM::Class::DlOpen("java/lang/Object"));
     classdb.addClass(new Espresso::VM::Class::DlOpen("java/lang/System"));
 
-    auto cls = Espresso::ClassParser::Class(argv[1]);
-    if (!cls) {
-        std::cerr << argv[1] << " wasn't loaded: " << cls.error() << std::endl;
+    auto cls = new Espresso::Blender::JVMClass(argv[1]);
+    if (!*cls) {
+        std::cerr << argv[1] << " wasn't loaded: " << cls->error() << std::endl;
         return 1;
     }
-    auto pcls = new Espresso::VM::Class::Parsed(cls);
-    classdb.addClass(pcls);
+    classdb.addClass(cls);
 
-    void (*fn)() = (void (*)())pcls->findMethod("<clinit>", "()V");
+    void (*fn)() = (void (*)())cls->findMethod("<clinit>", "()V");
     if (!fn) {
         std::cerr << argv[1] << " does not contain <clinit>()V" << std::endl;
         return 1;

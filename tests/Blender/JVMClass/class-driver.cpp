@@ -1,5 +1,4 @@
-#include "Class.hpp"
-#include "Class/Parsed.hpp"
+#include "JVMClass.hpp"
 #include "Logger.hpp"
 
 #include <iostream>
@@ -27,8 +26,7 @@ int main(int argc, char ** argv) {
 
     Espresso::Log = _log;
 
-    auto cp = Espresso::ClassParser::Class(argv[1]);
-    auto cls = Espresso::VM::Class::Parsed(cp);
+    auto cls = Espresso::Blender::JVMClass(argv[1]);
 
     for (int i = 2; i < argc; i += 2) {
         if (!cls.findMethod(argv[i], argv[i + 1])) {

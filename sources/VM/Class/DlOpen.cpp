@@ -51,7 +51,7 @@ char * _mangle(const char * cls, const char * method, const char * signature) {
     return res;
 }
 
-DlOpen::DlOpen(const char * name) : Base(name) {
+DlOpen::DlOpen(const char * name) : Base(), name_(name) {
 }
 
 void * DlOpen::findMethod(const char * method, const char * signature) {

@@ -10,7 +10,11 @@ namespace Espresso {
             public:
                 DlOpen(const char * name);
 
+                const char * name() const { return name_; }
+
                 void * findMethod(const char * name, const char * signature);
+            private:
+                const char * name_;
             };
         };
     };

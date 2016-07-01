@@ -8,18 +8,16 @@ namespace Espresso {
         namespace Class {
             class Base {
             public:
-                Base(const char * name);
+                Base();
     
                 ClassResolver * classResolver() const { return classResolver_; }
                 void classResolver(ClassResolver *);
 
-                const char * name() const { return name_; }
-    
-                void addMethod(const char * name, const char * signature, void * fn);
-                void * findMethod(const char * name, const char * signature);
+                virtual const char * name() const = 0;
+
+                virtual void * findMethod(const char * name, const char * signature) = 0;
             private:
                 ClassResolver * classResolver_;
-                const char * name_;
             };
         };
     };

@@ -2,7 +2,7 @@
 
 using namespace Espresso::VM::Class;
 
-Base::Base(const char * name) : name_(name) {
+Base::Base() {
 }
 
 void Base::classResolver(ClassResolver * cr) {

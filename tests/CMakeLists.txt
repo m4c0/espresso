@@ -36,6 +36,7 @@ endfunction()
 
 ### End of "this should go into a module"
 
+add_subdirectory(Blender)
 add_subdirectory(ClassParser)
 add_subdirectory(VM)
 add_subdirectory(Milestones)
