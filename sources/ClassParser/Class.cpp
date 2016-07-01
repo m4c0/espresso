@@ -6,37 +6,32 @@
 #include "ConstantPool/ClassInfo.hpp"
 #include "ConstantPool/Manager.hpp"
 
+#include <stdio.h>
+
 using namespace Espresso::ClassParser;
 
-#if USE_CPP_STL
 Class::Class(const char * filename) {
-    std::ifstream in(filename, std::ios::in | std::ios::binary);
-    loadClass(in);
-}
-Class::Class(std::string filename) {
-    std::ifstream in(filename, std::ios::in | std::ios::binary);
-    loadClass(in);
-}
-Class::Class(std::ifstream & in) {
-    loadClass(in);
-}
-
-void Class::loadClass(std::ifstream & in) {
-    if (!in) {
+    FILE * file = fopen(filename, "r");
+    if (!file) {
         message = "File not found";
         return;
     }
 
-    in.seekg(0, std::ios::end);
-    auto size = in.tellg();
+    fseek(file, 0, SEEK_END);
 
+    auto size = ftell(file);
     auto buffer = new char[size];
-    in.seekg(0, std::ios::beg);
-    in.read(buffer, size);
+
+    fseek(file, 0, SEEK_SET);
+    if (fread(buffer, 1, size, file) != size) {
+        message = "Error reading file";
+        return;
+    }
+    fclose(file);
+
     loadClass(buffer, size);
     delete buffer;
 }
-#endif
 
 Class::Class(const char * buffer, int len) {
     loadClass(buffer, len);

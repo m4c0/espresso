@@ -6,15 +6,11 @@
 #include "Failable.hpp"
 #include "Method.hpp"
 
-#if USE_CPP_STL
-#include <fstream>
-#include <string>
-#endif
-
 namespace Espresso {
     namespace ClassParser {
         class Class : public Attributed {
         public:
+            Class(const char * filename);
             Class(const char * data, int len);
 
             const char * name() const {
@@ -29,15 +25,6 @@ namespace Espresso {
             DataStream data_;
             const char * name_;
             Method * methods_;
-
-#if USE_CPP_STL
-        public:
-            Class(const char * filename);
-            Class(std::string filename);
-            Class(std::ifstream & file);
-        private:
-            void loadClass(std::ifstream & file);
-#endif
         };
     };
 };
