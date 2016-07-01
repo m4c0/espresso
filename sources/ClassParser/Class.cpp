@@ -43,38 +43,38 @@ Class::Class(const char * buffer, int len) {
 }
 
 void Class::loadClass(const char * buffer, int len) {
-    auto data = DataStream(buffer, len, true);
+    data_ = DataStream(buffer, len, true);
 
-    auto magic = data.readU32();
+    auto magic = data_.readU32();
     if (magic != 0xcafebabe) {
         message = "Invalid magic number";
         return;
     }
 
-    auto minorVersion = data.readU16();
+    auto minorVersion = data_.readU16();
     if (minorVersion != 0) { // Only happened on Java before 1.2
         message = "Class is probably too old (or too new)";
         return;
     }
-    auto majorVersion = data.readU16();
+    auto majorVersion = data_.readU16();
     if ((majorVersion < 46) || (majorVersion > 52)) { // We only support Java 1.2 up to 8
         message = "Unsupported class version";
         return;
     }
 
-    auto cpool = ConstantPool::Manager(data);
+    auto cpool = ConstantPool::Manager(data_);
     if (!cpool) {
         message = cpool.error();
         return;
     }
 
-    auto access = data.readU16();
+    auto access = data_.readU16();
     if (!access) {
         message = "Invalid access flags";
         return;
     }
 
-    auto thisClass = data.readU16();
+    auto thisClass = data_.readU16();
     if (!cpool.itemMatchesTag(thisClass, 7)) { // TODO: improve those tag constants
         message = "Invalid class";
         return;
@@ -87,41 +87,41 @@ void Class::loadClass(const char * buffer, int len) {
         return;
     }
 
-    auto superClass = data.readU16();
+    auto superClass = data_.readU16();
     if (!cpool.itemMatchesTag(superClass, 7)) { // TODO: improve those tag constants
         message = "Invalid super class";
         return;
     }
 
-    auto ifaceCount = data.readU16();
+    auto ifaceCount = data_.readU16();
     for (int i = 0; i < ifaceCount; i++) {
-        auto ifaceIdx = data.readU16();
+        auto ifaceIdx = data_.readU16();
         if (!cpool.itemMatchesTag(ifaceIdx, 7)) { // TODO: improve those tag constants
             message = "Invalid interface for class";
             return;
         }
     }
 
-    auto fieldCount = data.readU16();
+    auto fieldCount = data_.readU16();
     for (int i = 0; i < fieldCount; i++) {
-        auto field = Field(cpool, data);
+        auto field = Field(cpool, data_);
         if (!field) {
             message = field.error();
             return;
         }
     }
 
-    auto methodCount = data.readU16();
+    auto methodCount = data_.readU16();
     methods_ = new Method[methodCount + 1]; // Last one works as a "end" marker
     for (int i = 0; i < methodCount; i++) {
-        methods_[i] = Method(cpool, data);
+        methods_[i] = Method(cpool, data_);
         if (!methods_[i]) {
             message = methods_[i].error();
             return;
         }
     }
 
-    if (parseAttributes(cpool, data)) {
+    if (parseAttributes(cpool, data_)) {
         message = 0;
     }
 }

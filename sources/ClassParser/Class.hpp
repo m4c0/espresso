@@ -2,6 +2,7 @@
 #define __ESPRESSO_CLASS_H__
 
 #include "Attributed.hpp"
+#include "DataStream.hpp"
 #include "Failable.hpp"
 #include "Method.hpp"
 
@@ -25,6 +26,7 @@ namespace Espresso {
         private:
             void loadClass(const char * data, int len);
 
+            DataStream data_;
             const char * name_;
             Method * methods_;
 
