@@ -7,6 +7,7 @@ add_library(espresso-classparser-static STATIC
     Attributed.cpp
     Class.cpp
     ClassEntry.cpp
+    DataStream.cpp
     Field.cpp
     JIT.cpp
     Method.cpp

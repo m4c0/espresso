@@ -43,7 +43,7 @@ Class::Class(const char * buffer, int len) {
 }
 
 void Class::loadClass(const char * buffer, int len) {
-    auto data = DataStream(buffer, len);
+    auto data = DataStream(buffer, len, true);
 
     auto magic = data.readU32();
     if (magic != 0xcafebabe) {
