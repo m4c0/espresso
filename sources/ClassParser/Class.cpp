@@ -77,7 +77,7 @@ void Class::loadClass(const char * buffer, int len) {
     }
 
     auto classInfo = cpool.itemForIndex<ConstantPool::ClassInfo>(thisClass);
-    name_ = classInfo.className(cpool);
+    name_ = classInfo.className();
     if (!name_) {
         message = "Invalid class name at class info";
         return;
@@ -124,4 +124,5 @@ void Class::loadClass(const char * buffer, int len) {
 Class::~Class() {
     if (cpool_) delete cpool_;
 }
+
 

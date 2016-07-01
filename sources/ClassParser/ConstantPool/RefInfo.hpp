@@ -11,8 +11,12 @@ namespace Espresso {
             class RefInfo : public Item {
             public:
                 RefInfo(Manager & mgr, DataStream & data, int tag);
+
+                const char * className() const;
+                const char * name() const;
+                const char * descriptor() const;
             private:
-                const Item * const * className;
+                const Item * const * classInfo;
                 const Item * const * nameAndType;
             };
         };

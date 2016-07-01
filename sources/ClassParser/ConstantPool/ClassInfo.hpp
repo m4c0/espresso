@@ -12,9 +12,9 @@ namespace Espresso {
             public:
                 ClassInfo(Manager & mgr, DataStream & data);
 
-                const char * className(Manager & mgr) const;
+                const char * className() const;
             private:
-                int className_;
+                const Item * const * className_;
             };
         };
     };

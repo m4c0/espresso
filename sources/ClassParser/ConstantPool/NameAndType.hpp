@@ -11,9 +11,12 @@ namespace Espresso {
             class NameAndType : public Item {
             public:
                 NameAndType(Manager & mgr, DataStream & data);
+
+                const char * name() const;
+                const char * descriptor() const;
             private:
-                const Item * const * name;
-                const Item * const * descriptor;
+                const Item * const * name_;
+                const Item * const * descriptor_;
             };
         };
     };
