@@ -49,8 +49,11 @@ int main() {
     if (!_check("()V", jit_type_void, 0)) return 1;
     if (!_check("()I", jit_type_int, 0)) return 1;
     if (!_check("()J", jit_type_long, 0)) return 1;
+    if (!_check("()D", jit_type_float64, 0)) return 1;
+    if (!_check("()F", jit_type_float32, 0)) return 1;
     if (!_check("(I)I", jit_type_int, 1, jit_type_int)) return 1;
     if (!_check("(JI)I", jit_type_int, 2, jit_type_long, jit_type_int)) return 1;
+    if (!_check("(DF)D", jit_type_float64, 2, jit_type_float64, jit_type_float32)) return 1;
     return 0;
 }
 

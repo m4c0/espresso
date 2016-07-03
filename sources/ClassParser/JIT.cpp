@@ -48,6 +48,8 @@ JIT & JIT::stackSize(int size) {
 
 const char * _convert_type(const char * sign, jit_type_t * t) {
     switch (*sign++) {
+        case 'D': *t = jit_type_float64; break;
+        case 'F': *t = jit_type_float32; break;
         case 'I': *t = jit_type_int; break;
         case 'J': *t = jit_type_long; break;
         case 'V': *t = jit_type_void; break;
@@ -109,11 +111,22 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             case 10: // lconst_1
                 stack[stackPos++] = jit_value_create_long_constant(function, jit_type_long, opcode - 9);
                 break;
+            case 11: // fconst_0
+            case 12: // fconst_1
+            case 13: // fconst_2
+                stack[stackPos++] = jit_value_create_float32_constant(function, jit_type_float32, opcode - 11);
+                break;
+            case 14: // dconst_0
+            case 15: // dconst_1
+                stack[stackPos++] = jit_value_create_float64_constant(function, jit_type_float64, opcode - 14);
+                break;
             case 16: // bipush
                 stack[stackPos++] = jit_value_create_nint_constant(function, jit_type_int, data.readU8());
                 break;
             case 172: // ireturn
             case 173: // lreturn
+            case 174: // freturn
+            case 175: // dreturn
                 jit_insn_return(function, stack[--stackPos]);
                 break;
             case 177: // return
