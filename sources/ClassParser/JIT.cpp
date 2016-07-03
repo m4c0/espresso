@@ -90,6 +90,11 @@ void * JIT::buildFunction(MethodProvider * methods) const {
     auto stack = new jit_value_t[stackSize_];
     auto stackPos = 0; // TODO: Add overrun and underrun checks
 
+    auto locals = new jit_value_t[maxLocals_];
+    for (int i = 0; i < jit_type_num_params(signature); i++) {
+        locals[i] = jit_value_get_param(function, i);
+    }
+
     DataStream data = data_;
     while (!data.reachedEOS()) {
         auto opcode = data.readU8();
@@ -130,6 +135,13 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             //case 18: // ldc - TODO: deal with constant pool items
             //case 19: // ldc_w - TODO: deal with constant pool items (2 bytes)
             //case 20: // ldc2_w - TODO: deal with constant pool items (2 bytes, for long/double)
+            //case 21-25: loads
+            case 26: // iload_0
+            case 27: // iload_1
+            case 28: // iload_2
+            case 29: // iload_3
+                stack[stackPos++] = locals[opcode - 26];
+                break;
             case 172: // ireturn
             case 173: // lreturn
             case 174: // freturn
