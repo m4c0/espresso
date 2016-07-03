@@ -98,6 +98,7 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                 // Just in case some kind of CPU cycle waste is required
                 jit_insn_nop(function);
                 break;
+            //case 1: // aconst_null TODO: deal with objects
             case 2: // iconst_m1
             case 3: // iconst_0
             case 4: // iconst_1
@@ -123,6 +124,12 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             case 16: // bipush
                 stack[stackPos++] = jit_value_create_nint_constant(function, jit_type_int, data.readU8());
                 break;
+            case 17: // sipush
+                stack[stackPos++] = jit_value_create_nint_constant(function, jit_type_int, data.readU16());
+                break;
+            //case 18: // ldc - TODO: deal with constant pool items
+            //case 19: // ldc_w - TODO: deal with constant pool items (2 bytes)
+            //case 20: // ldc2_w - TODO: deal with constant pool items (2 bytes, for long/double)
             case 172: // ireturn
             case 173: // lreturn
             case 174: // freturn
