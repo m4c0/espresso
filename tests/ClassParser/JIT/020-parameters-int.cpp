@@ -24,6 +24,11 @@ int main() {
     if (!_test("\x1c\xac", 2, 99, 0, 0, 99, 0)) return 1; // iload_2; ireturn
     if (!_test("\x1d\xac", 2, 99, 0, 0, 0, 99)) return 1; // iload_3; ireturn
 
+    if (!_test("\x15\0\xac", 3, 99, 99, 0, 0, 0)) return 1; // iload 0; ireturn
+    if (!_test("\x15\1\xac", 3, 99, 0, 99, 0, 0)) return 1; // iload 1; ireturn
+    if (!_test("\x15\2\xac", 3, 99, 0, 0, 99, 0)) return 1; // iload 2; ireturn
+    if (!_test("\x15\3\xac", 3, 99, 0, 0, 0, 99)) return 1; // iload 3; ireturn
+
     return 0;
 }
 

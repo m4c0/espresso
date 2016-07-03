@@ -135,7 +135,10 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             //case 18: // ldc - TODO: deal with constant pool items
             //case 19: // ldc_w - TODO: deal with constant pool items (2 bytes)
             //case 20: // ldc2_w - TODO: deal with constant pool items (2 bytes, for long/double)
-            //case 21-25: loads
+            case 21: // iload
+                stack[stackPos++] = locals[data.readU8()];
+                break;
+            //case 22-25: loads
             case 26: // iload_0
             case 27: // iload_1
             case 28: // iload_2
