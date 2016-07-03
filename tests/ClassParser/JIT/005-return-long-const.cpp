@@ -17,7 +17,7 @@ static bool _test(const char * data, int size, long result) {
 }
 
 int main() {
-    if (!_test("\x09\xad", 2,  0)) return 2; // iconst_0;  ireturn
-    if (!_test("\x0a\xad", 2,  1)) return 3; // iconst_1;  ireturn
+    if (!_test("\x09\xad", 2, 0)) return 2; // lconst_0; lreturn
+    if (!_test("\x0a\xad", 2, 1)) return 3; // lconst_1; lreturn
 }
 

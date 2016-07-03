@@ -1,5 +1,6 @@
 #include "JIT.hpp"
 
+#include "ConstantPool/MethodRefInfo.hpp"
 #include "Logger.hpp"
 
 #include <jit/jit.h>
@@ -45,7 +46,39 @@ JIT & JIT::stackSize(int size) {
     return *this;
 }
 
+const char * _convert_type(const char * sign, jit_type_t * t) {
+    switch (*sign++) {
+        case 'I': *t = jit_type_int; break;
+        case 'V': *t = jit_type_void; break;
+        default: return 0;
+    }
+    return sign;
+}
+
+jit_type_t _convert_signature(const char * sign) {
+    if (*sign != '(') return 0;
+    sign++;
+
+    jit_type_t args[1024];
+    int argc = 0;
+    while (sign && (*sign != 0) && (*sign != ')')) {
+        sign = _convert_type(sign, args + argc);
+        argc++;
+    } 
+    if (!sign || (*sign != ')')) return 0;
+    sign++;
+
+    jit_type_t ret;
+    sign = _convert_type(sign, &ret);
+    if (!sign || *sign) return 0;
+
+    return jit_type_create_signature(jit_abi_cdecl, ret, args, argc, 0);
+}
+
 void * JIT::buildFunction() const {
+    return buildFunction(0);
+}
+void * JIT::buildFunction(MethodProvider * methods) const {
     jit_context_build_start(_context);
 
     jit_type_t ret;
@@ -72,14 +105,14 @@ void * JIT::buildFunction() const {
             case 6: // iconst_3
             case 7: // iconst_4
             case 8: // iconst_5
-                stack[stackPos++] = jit_value_create_nint_constant(function, jit_type_nint, opcode - 3);
+                stack[stackPos++] = jit_value_create_nint_constant(function, jit_type_int, opcode - 3);
                 break;
             case 9:  // lconst_0
             case 10: // lconst_1
                 stack[stackPos++] = jit_value_create_long_constant(function, jit_type_long, opcode - 9);
                 break;
             case 16: // bipush
-                stack[stackPos++] = jit_value_create_nint_constant(function, jit_type_nint, data.readU8());
+                stack[stackPos++] = jit_value_create_nint_constant(function, jit_type_int, data.readU8());
                 break;
             case 172: // ireturn
             case 173: // lreturn
@@ -94,10 +127,28 @@ void * JIT::buildFunction() const {
                     if (Espresso::Log) Espresso::Log("Tried to JIT a invokestatic without a constant pool");
                     return 0;
                 }
+                if (!methods) {
+                    if (Espresso::Log) Espresso::Log("Tried to JIT a invokestatic without a class resolver");
+                    return 0;
+                }
                 if (!cpool_->itemMatchesTag(index, 10)) {
                     if (Espresso::Log) Espresso::Log("Tried to JIT a invokestatic using an invalid constant pool value at %d", index);
                     return 0;
                 }
+                auto info = cpool_->itemForIndex<ConstantPool::MethodRefInfo>(index);
+                auto fn = methods->getNativeMethod(info.className(), info.name(), info.descriptor());
+                if (!fn) {
+                    if (Espresso::Log) Espresso::Log("Method not found: %s.%s%s", info.className(), info.name(), info.descriptor());
+                    return 0;
+                }
+                auto sign = _convert_signature(info.descriptor());
+                auto argc = jit_type_num_params(sign);
+                auto args = new jit_value_t[argc];
+                for (int i = 0; i < argc; i++) {
+                    args[i] = stack[--stackPos];
+                }
+                stack[stackPos++] = jit_insn_call_native(function, 0, fn, sign, args, argc, JIT_CALL_NOTHROW);
+                delete[] args;
                 break;
             }
             default:

@@ -1,5 +1,6 @@
 add_library(espresso-blender-static STATIC
     JVMClass.cpp
+    VMMethodProvider.cpp
     )
 target_include_directories(espresso-blender-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_features(espresso-blender-static PRIVATE cxx_auto_type)

@@ -2,6 +2,7 @@
 #include "JVMClass.hpp"
 #include "ClassResolver.hpp"
 #include "Logger.hpp"
+#include "VMMethodProvider.hpp"
 
 #include <iostream>
 
@@ -40,7 +41,9 @@ int main(int argc, char ** argv) {
     }
     classdb.addClass(cls);
 
-    void (*fn)() = (void (*)())cls->findMethod("<clinit>", "()V");
+    auto vmp = Espresso::Blender::VMMethodProvider(&classdb);
+
+    void (*fn)() = (void (*)())vmp.getNativeMethod(cls->name(), "<clinit>", "()V");
     if (!fn) {
         std::cerr << argv[1] << " does not contain <clinit>()V" << std::endl;
         return 1;

@@ -4,6 +4,7 @@
 #include "Attribute/Code.hpp"
 #include "ClassEntry.hpp"
 #include "ConstantPool/Manager.hpp"
+#include "MethodProvider.hpp"
 
 namespace Espresso {
     namespace ClassParser {
@@ -12,7 +13,7 @@ namespace Espresso {
             Method();
             Method(ConstantPool::Manager & cpool, DataStream & data);
 
-            void * code() const { return code_.code(); }
+            void * buildFunction(MethodProvider * methods) const { return code_.buildFunction(methods); }
 
         private:
             Attribute::Code code_;

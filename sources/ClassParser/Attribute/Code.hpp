@@ -5,6 +5,7 @@
 #include "ConstantPool/Manager.hpp"
 #include "DataStream.hpp"
 #include "JIT.hpp"
+#include "MethodProvider.hpp"
 
 namespace Espresso {
     namespace ClassParser {
@@ -14,7 +15,7 @@ namespace Espresso {
                 Code();
                 Code(ConstantPool::Manager & cpool, DataStream & data);
 
-                void * code() const { return code_.buildFunction(); }
+                void * buildFunction(MethodProvider * methods) const { return code_.buildFunction(methods); }
 
             private:
                 JIT code_;

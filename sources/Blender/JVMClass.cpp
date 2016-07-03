@@ -1,18 +1,20 @@
 #include "JVMClass.hpp"
 
+#include "VMMethodProvider.hpp"
+
 #include <string.h>
 
 using namespace Espresso::Blender;
 
 class JVMClass::Method {
 public:
-    Method(const Espresso::ClassParser::Method * method) {
-        code_ = method->code();
+    Method(VMMethodProvider vmp, const Espresso::ClassParser::Method * method) {
+        code_ = method->buildFunction(&vmp);
         name_ = method->name();
         signature_ = method->descriptor();
 
         method++;
-        next_ = *method ? new Method(method) : 0;
+        next_ = *method ? new Method(vmp, method) : 0;
     }
 
     void * findMethod(const char * name, const char * signature) const {
@@ -31,10 +33,8 @@ public:
 };
 
 JVMClass::JVMClass(const char * filename) : Class(filename), Base(), methods_(0) {
-    methods_ = methods() ? new Method(methods()) : 0;
 }
 JVMClass::JVMClass(const char * data, int len) : Class(data, len), Base(), methods_(0) {
-    methods_ = methods() ? new Method(methods()) : 0;
 }
 
 const char * JVMClass::name() const {
@@ -42,6 +42,9 @@ const char * JVMClass::name() const {
 }
 
 void * JVMClass::findMethod(const char * name, const char * signature) {
+    if (!methods_) {
+        methods_ = methods() ? new Method(VMMethodProvider(classResolver()), methods()) : 0;
+    }
     return methods_->findMethod(name, signature);
 }
 

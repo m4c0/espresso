@@ -4,6 +4,7 @@
 #include "ConstantPool/Manager.hpp"
 #include "DataStream.hpp"
 #include "Failable.hpp"
+#include "MethodProvider.hpp"
 
 namespace Espresso {
     namespace ClassParser {
@@ -20,6 +21,7 @@ namespace Espresso {
             JIT & stackSize(int size);
 
             void * buildFunction() const;
+            void * buildFunction(MethodProvider * methods) const;
         private:
             ConstantPool::Manager * cpool_;
             DataStream data_;
