@@ -5,7 +5,7 @@ using namespace Espresso::ClassParser;
 static bool _test(const char * data, int size, int result) {
     auto jit = JIT()
         .dataStream(DataStream(data, size))
-        .returnType(JIT::Int);
+        .signature("()I");
     if (!jit) return false;
 
     int (*fn)() = (int(*)())jit.buildFunction();

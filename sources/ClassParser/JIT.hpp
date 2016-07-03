@@ -10,14 +10,12 @@ namespace Espresso {
     namespace ClassParser {
         class JIT : public Failable {
         public:
-            typedef enum { Int, Long, Void } Type;
-
             JIT();
 
             JIT & constantPool(ConstantPool::Manager * cpool);
             JIT & dataStream(DataStream data);
             JIT & maxLocals(int size);
-            JIT & returnType(Type type); 
+            JIT & signature(const char * sign); 
             JIT & stackSize(int size);
 
             void * buildFunction() const;
@@ -25,7 +23,7 @@ namespace Espresso {
         private:
             ConstantPool::Manager * cpool_;
             DataStream data_;
-            Type returnType_;
+            const char * signature_;
             int stackSize_;
             int maxLocals_;
         };

@@ -48,7 +48,7 @@ int main() {
     auto jit = JIT()
         .constantPool(&cp)
         .dataStream(DataStream("\7\xb8\0\1\xac", 5)) // iconst_4; invokestatic 1; ireturn
-        .returnType(JIT::Int);
+        .signature("()I");
     if (!jit) return 1;
 
     auto mr = MyMethodProvider();

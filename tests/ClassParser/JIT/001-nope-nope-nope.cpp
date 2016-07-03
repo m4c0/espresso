@@ -3,8 +3,7 @@
 using namespace Espresso::ClassParser;
 
 int main() {
-    // TODO: Define and test what happens to functions without a return
-    auto jit = JIT().dataStream(DataStream("\xb1", 1)); // return
+    auto jit = JIT().dataStream(DataStream("\x00\x00\x00\xb1", 4)); // nop; nop; nop; return
     if (!jit) return 1;
 
     void (*fn)() = (void(*)())jit.buildFunction();

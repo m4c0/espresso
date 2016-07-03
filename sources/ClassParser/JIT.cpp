@@ -19,7 +19,7 @@ static __attribute__((destructor)) void _cleanup_libjit() {
 }
 
 JIT::JIT() {
-    returnType_ = Void;
+    signature_ = "()V";
     stackSize_ = 65535;
     maxLocals_ = 65535;
     message = 0;
@@ -37,8 +37,8 @@ JIT & JIT::maxLocals(int locals) {
     maxLocals_ = locals;
     return *this;
 }
-JIT & JIT::returnType(Type type) {
-    returnType_ = type;
+JIT & JIT::signature(const char * sign) {
+    signature_ = sign;
     return *this;
 }
 JIT & JIT::stackSize(int size) {
@@ -49,6 +49,7 @@ JIT & JIT::stackSize(int size) {
 const char * _convert_type(const char * sign, jit_type_t * t) {
     switch (*sign++) {
         case 'I': *t = jit_type_int; break;
+        case 'J': *t = jit_type_long; break;
         case 'V': *t = jit_type_void; break;
         default: return 0;
     }
@@ -81,14 +82,7 @@ void * JIT::buildFunction() const {
 void * JIT::buildFunction(MethodProvider * methods) const {
     jit_context_build_start(_context);
 
-    jit_type_t ret;
-    switch (returnType_) {
-        case Void: ret = jit_type_void; break;
-        case Long: ret = jit_type_long; break;
-        case Int:  ret = jit_type_int; break;
-    }
-
-    auto signature = jit_type_create_signature(jit_abi_cdecl, ret, 0, 0, 0);
+    auto signature = _convert_signature(signature_);
     auto function = jit_function_create(_context, signature);
 
     auto stack = new jit_value_t[stackSize_];
@@ -98,6 +92,10 @@ void * JIT::buildFunction(MethodProvider * methods) const {
     while (!data.reachedEOS()) {
         auto opcode = data.readU8();
         switch (opcode) {
+            case 0: // nop
+                // Just in case some kind of CPU cycle waste is required
+                jit_insn_nop(function);
+                break;
             case 2: // iconst_m1
             case 3: // iconst_0
             case 4: // iconst_1
