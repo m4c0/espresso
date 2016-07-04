@@ -166,6 +166,39 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             case 41: // dload_3
                 stack[stackPos++] = locals[opcode - 38];
                 break;
+            //case 42-53: more loads
+            case 54: // istore
+            case 55: // lstore
+            case 56: // fstore
+            case 57: // dstore
+            //case 58: // astore
+                locals[data.readU8()] = stack[--stackPos];
+                break;
+            case 59: // istore_0
+            case 60: // istore_1
+            case 61: // istore_2
+            case 62: // istore_3
+                locals[opcode - 59] = stack[--stackPos];
+                break;
+            case 63: // lstore_0
+            case 64: // lstore_1
+            case 65: // lstore_2
+            case 66: // lstore_3
+                locals[opcode - 63] = stack[--stackPos];
+                break;
+            case 67: // fstore_0
+            case 68: // fstore_1
+            case 69: // fstore_2
+            case 70: // fstore_3
+                locals[opcode - 67] = stack[--stackPos];
+                break;
+            case 71: // dstore_0
+            case 72: // dstore_1
+            case 73: // dstore_2
+            case 74: // dstore_3
+                locals[opcode - 71] = stack[--stackPos];
+                break;
+            //case 75-86: more stores
             case 172: // ireturn
             case 173: // lreturn
             case 174: // freturn
