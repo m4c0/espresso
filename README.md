@@ -39,6 +39,13 @@ Mix components together. Comes from the need of leaving components fully indepen
 
 Contains the runtime. Currently, only contains a list of classes.
 
+## Known differences
+
+There are known design differences from Oracle's JVM and our implementation:
+
++ There's no interpreted code. All code is compiled into native during class load
++ We don't treat long/double differently for stack/locals, except for "dup2" and "pop2" (just because it breaks compatibility otherwise)
+
 ## Disclaimer
 
 This project (and myself) are not at all related to Oracle. This is also not Java, since this is a Trademark of Oracle. I also take no responsability for damages or lack of features.

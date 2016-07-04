@@ -1,6 +1,25 @@
 # Milestones
 
-## "Hello, world"
+## Milestone 2: Flow control and recursive calls
+
++   *Objective:* Add support for flow control and recursive calls
++   *Example Code:*
+
+        public class Example {
+            static int fib(int n) {
+                if (n < 2) return 1;
+                return fib(n - 1) + fib(n - 2);
+            }
+        }
+
++   *Reasonings:*
+    + After the previous milestone, large groups of opcodes can be easily added, except objects and flow control. The former also requires an object model. The latter, just a small refactor on JIT.
+    + Recursive calls are common, and will fail with current method resolving implementation.
++   *Expected New Features:*
+    + Flow control
+    + Recursive calls
+
+## Milestone 1: "Hello, world"
 
 +   *Objective:* Run the smallest piece of code that can give back any kind of feedback
 +   *Example Code:*
@@ -30,4 +49,23 @@
 +   *Caveats:*
     + There's a lot to be done, but this version will be as MVP as possible. This means milestone will be "reached" if that specific example pass.
     + At the end of this milestone, we will probably have only an empty Object and a System with only one method. This will work, since Java linkage only care about methods listed on the class file.
+
+# Future milestones
+
+## Milestone X: Instances
+
++   *Objective:* Run the smallest piece of code that can give feedback from an instance
++   *Example Code:*
+
+        public class Example {
+            void method() {
+                System.exit(99);
+            }
+        }
+
++   *Reasonings:*
+    + A baby-step, using previous infrastructure to add a important feature of OOP: objects
++   *Expected New Features:*
+    + Instances
++   *Caveats:*
 

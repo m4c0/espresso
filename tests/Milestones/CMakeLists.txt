@@ -1,7 +1,12 @@
-add_executable(espresso-milestone1-testdriver driver.cpp)
-target_compile_features(espresso-milestone1-testdriver PRIVATE cxx_auto_type)
-target_link_libraries(espresso-milestone1-testdriver PUBLIC espresso-blender)
-set_target_properties(espresso-milestone1-testdriver PROPERTIES FOLDER "tests/milestones")
+function(espresso_milestone TEST_NAME CLASS_NAME)
+    add_executable(espresso-${TEST_NAME}-testdriver ${TEST_NAME}.cpp)
+    target_compile_features(espresso-${TEST_NAME}-testdriver PRIVATE cxx_auto_type)
+    target_link_libraries(espresso-${TEST_NAME}-testdriver PUBLIC espresso-blender)
+    set_target_properties(espresso-${TEST_NAME}-testdriver PROPERTIES FOLDER "tests/milestones")
 
-espresso_java_test(milestone1 Milestone1 -g:none)
+    espresso_java_test(${TEST_NAME} ${CLASS_NAME} -g:none)
+endfunction()
+
+espresso_milestone(milestone1 Milestone1)
+espresso_milestone(milestone2 Milestone2)
 
