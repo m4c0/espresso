@@ -15,6 +15,9 @@ namespace Espresso {
 
             DataStream & operator=(const DataStream & copy);
 
+            int bytesRead() { return read; }
+            int bytesRemaining() { return remaining; }
+
             bool reachedEOS();
 
             uint8_t readU8();
@@ -26,6 +29,7 @@ namespace Espresso {
             const char * original;
             const char * buffer;
             int remaining;
+            int read;
         };
     };
 };

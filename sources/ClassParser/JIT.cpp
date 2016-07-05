@@ -96,7 +96,13 @@ void * JIT::buildFunction(MethodProvider * methods) const {
     }
 
     DataStream data = data_;
+    auto labels = new jit_label_t[data.bytesRemaining()];
+    for (int i = 0; i < data.bytesRemaining(); i++) {
+        labels[i] = jit_label_undefined;
+    }
     while (!data.reachedEOS()) {
+        jit_insn_label(function, labels + data.bytesRead());
+
         auto opcode = data.readU8();
         switch (opcode) {
             case 0: // nop
@@ -199,6 +205,16 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                 locals[opcode - 71] = stack[--stackPos];
                 break;
             //case 75-86: more stores
+            case 162: { // if_icmpge
+                auto pos = data.bytesRead() - 1;
+                auto jmp = data.readU16();
+
+                auto one = stack[--stackPos];
+                auto two = stack[--stackPos];
+                auto tmp = jit_insn_ge(function, one, two);
+                jit_insn_branch_if(function, tmp, labels + pos + jmp);
+                break;
+            }
             case 172: // ireturn
             case 173: // lreturn
             case 174: // freturn

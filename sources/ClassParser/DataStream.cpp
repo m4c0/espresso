@@ -6,16 +6,16 @@
 
 using namespace Espresso::ClassParser;
 
-DataStream::DataStream() : buffer(0), remaining(0), original(0) {
+DataStream::DataStream() : buffer(0), remaining(0), original(0), read(0) {
 }
-DataStream::DataStream(const DataStream & copy) : original(0) {
+DataStream::DataStream(const DataStream & copy) : original(0), read(0) {
     *this = copy;
 }
-DataStream::DataStream(const char * data, int len) : original(0) {
+DataStream::DataStream(const char * data, int len) : original(0), read(0) {
     buffer = data;
     remaining = len;
 }
-DataStream::DataStream(const char * data, int len, bool copy) : original(0) {
+DataStream::DataStream(const char * data, int len, bool copy) : original(0), read(0) {
     if (!copy) {
         buffer = data;
         remaining = len;
@@ -53,6 +53,7 @@ uint8_t DataStream::readU8() {
     auto result = *buffer;
     buffer++;
     remaining--;
+    read++;
     return result;
 }
 
