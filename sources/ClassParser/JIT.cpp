@@ -206,7 +206,10 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                 break;
             //case 75-86: more stores
             case 100: { // isub
-
+                auto one = stack[--stackPos];
+                auto two = stack[--stackPos];
+                stack[stackPos++] = jit_insn_sub(function, two, one);
+                break;
             }
             case 162: { // if_icmpge
                 auto pos = data.bytesRead() - 1;
