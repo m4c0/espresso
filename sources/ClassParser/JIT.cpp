@@ -205,13 +205,16 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                 locals[opcode - 71] = stack[--stackPos];
                 break;
             //case 75-86: more stores
+            case 100: { // isub
+
+            }
             case 162: { // if_icmpge
                 auto pos = data.bytesRead() - 1;
                 auto jmp = data.readU16();
 
                 auto one = stack[--stackPos];
                 auto two = stack[--stackPos];
-                auto tmp = jit_insn_ge(function, one, two);
+                auto tmp = jit_insn_ge(function, two, one);
                 jit_insn_branch_if(function, tmp, labels + pos + jmp);
                 break;
             }
