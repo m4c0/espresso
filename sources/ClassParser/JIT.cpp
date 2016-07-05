@@ -6,8 +6,30 @@
 #include <jit/jit.h>
 #include <jit/jit-dump.h>
 #include <stdio.h>
+#include <string.h>
 
 using namespace Espresso::ClassParser;
+
+class InProgress {
+public:
+    InProgress(const char * c, const char * m, const char * s, jit_function_t f, InProgress * n) : clazz(c), method(m), signature(s), function(f), next(n) {}
+
+    jit_function_t find(const char * c, const char * m, const char * s) {
+        if ((strcmp(clazz, c) == 0) && (strcmp(method, m) == 0) && (strcmp(signature, s) == 0)) {
+            return function;
+        }
+        if (!next) return 0;
+        return next->find(c, m, s);
+    }
+
+    const char * clazz;
+    const char * method;
+    const char * signature;
+    jit_function_t function;
+
+    InProgress * next;
+};
+static InProgress * _progressStack = 0;
 
 static jit_context_t _context;
 
@@ -25,6 +47,10 @@ JIT::JIT() {
     message = 0;
 }
 
+JIT & JIT::className(const char * name) {
+    className_ = name;
+    return *this;
+}
 JIT & JIT::constantPool(ConstantPool::Manager * cpool) {
     cpool_ = cpool;
     return *this;
@@ -35,6 +61,10 @@ JIT & JIT::dataStream(DataStream data) {
 }
 JIT & JIT::maxLocals(int locals) {
     maxLocals_ = locals;
+    return *this;
+}
+JIT & JIT::methodName(const char * name) {
+    methodName_ = name;
     return *this;
 }
 JIT & JIT::signature(const char * sign) {
@@ -86,6 +116,8 @@ void * JIT::buildFunction(MethodProvider * methods) const {
 
     auto signature = _convert_signature(signature_);
     auto function = jit_function_create(_context, signature);
+
+    _progressStack = new InProgress(className_, methodName_, signature_, function, _progressStack);
 
     auto stack = new jit_value_t[stackSize_];
     auto stackPos = 0; // TODO: Add overrun and underrun checks
@@ -244,17 +276,27 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                     if (Espresso::Log) Espresso::Log("Tried to JIT a invokestatic using an invalid constant pool value at %d", index);
                     return 0;
                 }
+
                 auto info = cpool_->itemForIndex<ConstantPool::MethodRefInfo>(index);
-                auto fn = methods->getNativeMethod(info.className(), info.name(), info.descriptor());
-                if (!fn) {
-                    if (Espresso::Log) Espresso::Log("Method not found: %s.%s%s", info.className(), info.name(), info.descriptor());
-                    return 0;
-                }
+
                 auto sign = _convert_signature(info.descriptor());
                 auto argc = jit_type_num_params(sign);
                 auto args = new jit_value_t[argc];
                 for (int i = 0; i < argc; i++) {
                     args[i] = stack[--stackPos];
+                }
+
+                auto ipfn = _progressStack->find(info.className(), info.name(), info.descriptor());
+                if (ipfn) {
+                    stack[stackPos++] = jit_insn_call(function, 0, ipfn, sign, args, argc, JIT_CALL_NOTHROW);
+                    delete[] args;
+                    break;
+                }
+
+                auto fn = methods->getNativeMethod(info.className(), info.name(), info.descriptor());
+                if (!fn) {
+                    if (Espresso::Log) Espresso::Log("Method not found: %s.%s%s", info.className(), info.name(), info.descriptor());
+                    return 0;
                 }
                 stack[stackPos++] = jit_insn_call_native(function, 0, fn, sign, args, argc, JIT_CALL_NOTHROW);
                 delete[] args;
@@ -268,6 +310,10 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                 //return 0;
         }
     }
+
+    auto next = _progressStack->next;
+    delete _progressStack;
+    _progressStack = next;
 
 #warning "do a '#if DEBUG' or something"
     jit_dump_function(stderr, function, 0);

@@ -12,17 +12,21 @@ namespace Espresso {
         public:
             JIT();
 
+            JIT & className(const char * sign); 
             JIT & constantPool(ConstantPool::Manager * cpool);
             JIT & dataStream(DataStream data);
             JIT & maxLocals(int size);
+            JIT & methodName(const char * sign); 
             JIT & signature(const char * sign); 
             JIT & stackSize(int size);
 
             void * buildFunction() const;
             void * buildFunction(MethodProvider * methods) const;
         private:
+            const char * className_;
             ConstantPool::Manager * cpool_;
             DataStream data_;
+            const char * methodName_;
             const char * signature_;
             int stackSize_;
             int maxLocals_;

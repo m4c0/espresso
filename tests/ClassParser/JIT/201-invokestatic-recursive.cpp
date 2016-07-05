@@ -40,7 +40,7 @@ int main() {
         return -1;
     }
 
-    // if (a == 0) return 0;
+    // if (a < 0) return 0;
     // return fn(a - 1) - 1
 
     // 0:  iload_0
@@ -52,12 +52,14 @@ int main() {
     // 8:  iconst_1
     // 9:  isub
     // 10: invokestatic 1
-    // 12: iconst_1
-    // 13: isub
-    // 14: ireturn
+    // 13: iconst_1
+    // 14: isub
+    // 15: ireturn
     jit = JIT()
         .constantPool(&cp)
-        .dataStream(DataStream("\x1a\x03\xa2\x00\x05\x03\xac\x1a\x04\x64\xb8\x00\x01\x04\x64\xac", 15))
+        .dataStream(DataStream("\x1a\x03\xa2\x00\x05\x03\xac\x1a\x04\x64\xb8\x00\x01\x04\x64\xac", 16))
+        .className("Test")
+        .methodName("test")
         .signature("(I)I");
     if (!jit) return 1;
 
@@ -65,9 +67,9 @@ int main() {
     int (*fn)(int) = (int(*)(int))jit.buildFunction(&mr);
     if (!fn) return 2;
 
-    if (fn(5) != -5) return 3;
-    if (fn(3) != -3) return 4;
+    if (fn(5) != -6) return 3;
+    if (fn(3) != -4) return 4;
 
-    // TODO: Test for recursion
+    // TODO: Test for looped recursion (a calls b, b calls a)
     return 0;
 }
