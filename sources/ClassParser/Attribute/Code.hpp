@@ -15,6 +15,8 @@ namespace Espresso {
                 Code();
                 Code(ConstantPool::Manager & cpool, DataStream & data);
 
+                void signature(const char * signature) { code_.signature(signature); }
+
                 void * buildFunction(MethodProvider * methods) const { return code_.buildFunction(methods); }
 
             private:
