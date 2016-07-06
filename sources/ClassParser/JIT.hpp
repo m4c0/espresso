@@ -15,6 +15,7 @@ namespace Espresso {
             JIT & className(const char * sign); 
             JIT & constantPool(ConstantPool::Manager * cpool);
             JIT & dataStream(DataStream data);
+            JIT & instanceMethod(bool im);
             JIT & maxLocals(int size);
             JIT & methodName(const char * sign); 
             JIT & signature(const char * sign); 
@@ -27,6 +28,7 @@ namespace Espresso {
             ConstantPool::Manager * cpool_;
             DataStream data_;
             const char * methodName_;
+            bool instance_;
             const char * signature_;
             int stackSize_;
             int maxLocals_;

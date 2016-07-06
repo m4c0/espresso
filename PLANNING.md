@@ -1,5 +1,25 @@
 # Milestones
 
+## Milestone 3: Instances
+
++   *Objective:* Run the smallest piece of code that can give feedback from an instance
++   *Example Code:*
+
+        public class Example {
+            int sum(int a, int b) {
+                return a + b;
+            }
+        }
+
++   *Reasonings:*
+    + After previous milestones, there isn't much baby-steps we can do without instancing.
++   *Expected New Features:*
+    + Instance handling
+    + Instance methods (i.e. something that receives "this" as first parameter)
++   *Caveats:*
+    + Instantiation can be done externally (i.e. without the "new" opcode)
+    + This simple example can ignore fields and possibly the constructor
+
 ## Milestone 2: Flow control and recursive calls
 
 +   *Objective:* Add support for flow control and recursive calls
@@ -51,21 +71,4 @@
     + At the end of this milestone, we will probably have only an empty Object and a System with only one method. This will work, since Java linkage only care about methods listed on the class file.
 
 # Future milestones
-
-## Milestone X: Instances
-
-+   *Objective:* Run the smallest piece of code that can give feedback from an instance
-+   *Example Code:*
-
-        public class Example {
-            void method() {
-                System.exit(99);
-            }
-        }
-
-+   *Reasonings:*
-    + A baby-step, using previous infrastructure to add a important feature of OOP: objects
-+   *Expected New Features:*
-    + Instances
-+   *Caveats:*
 

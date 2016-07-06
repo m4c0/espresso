@@ -31,6 +31,9 @@ ClassEntry::ClassEntry(ConstantPool::Manager & cpool, DataStream & data) {
 }
 
 bool ClassEntry::isAbstract() const {
-    return (access_ & 0x400) != 0;
+    return (access_ & 0x0400) != 0;
+}
+bool ClassEntry::isStatic() const {
+    return (access_ & 0x0008) != 0;
 }
 

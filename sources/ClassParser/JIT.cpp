@@ -25,10 +25,12 @@ static __attribute__((destructor)) void _cleanup_libjit() {
 }
 
 JIT::JIT() {
+    className_ = methodName_ = 0;
     signature_ = "()V";
     stackSize_ = 65535;
     maxLocals_ = 65535;
     message = 0;
+    instance_ = false;
 }
 
 JIT & JIT::className(const char * name) {
@@ -41,6 +43,10 @@ JIT & JIT::constantPool(ConstantPool::Manager * cpool) {
 }
 JIT & JIT::dataStream(DataStream data) {
     data_ = data;
+    return *this;
+}
+JIT & JIT::instanceMethod(bool i) {
+    instance_ = i;
     return *this;
 }
 JIT & JIT::maxLocals(int locals) {
@@ -72,12 +78,16 @@ const char * _convert_type(const char * sign, jit_type_t * t) {
     return sign;
 }
 
-jit_type_t _convert_signature(const char * sign) {
+jit_type_t _convert_signature(const char * sign, bool instance) {
     if (*sign != '(') return 0;
     sign++;
 
     jit_type_t args[1024];
     int argc = 0;
+    if (instance) {
+        args[0] = jit_type_void_ptr;
+        argc++;
+    }
     while (sign && (*sign != 0) && (*sign != ')')) {
         sign = _convert_type(sign, args + argc);
         argc++;
@@ -98,7 +108,7 @@ void * JIT::buildFunction() const {
 void * JIT::buildFunction(MethodProvider * methods) const {
     jit_context_build_start(_context);
 
-    auto signature = _convert_signature(signature_);
+    auto signature = _convert_signature(signature_, instance_);
     auto function = jit_function_create(_context, signature);
 
     _progressStack = new ProgressNode(className_, methodName_, signature_, function, _progressStack);
@@ -260,7 +270,7 @@ void * JIT::buildFunction(MethodProvider * methods) const {
 
                 auto info = cpool_->itemForIndex<ConstantPool::MethodRefInfo>(index);
 
-                auto sign = _convert_signature(info.descriptor());
+                auto sign = _convert_signature(info.descriptor(), false);
                 auto argc = jit_type_num_params(sign);
                 auto args = new jit_value_t[argc];
                 for (int i = 0; i < argc; i++) {

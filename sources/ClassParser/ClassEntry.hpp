@@ -14,6 +14,7 @@ namespace Espresso {
             ClassEntry(ConstantPool::Manager & cpool, DataStream & data);
 
             bool isAbstract() const;
+            bool isStatic() const;
 
             const char * descriptor() const {
                 return descriptor_;

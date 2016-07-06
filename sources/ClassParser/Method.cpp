@@ -13,6 +13,7 @@ Method::Method(ConstantPool::Manager & cpool, DataStream & data) : ClassEntry(cp
 
 JIT Method::code() const {
     return code_.code()
+        .instanceMethod(!isStatic())
         .methodName(name())
         .signature(descriptor());
 }
