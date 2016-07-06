@@ -237,6 +237,12 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                 locals[opcode - 71] = stack[--stackPos];
                 break;
             //case 75-86: more stores
+            case 96: { // iadd
+                auto one = stack[--stackPos];
+                auto two = stack[--stackPos];
+                stack[stackPos++] = jit_insn_add(function, two, one);
+                break;
+            }
             case 100: { // isub
                 auto one = stack[--stackPos];
                 auto two = stack[--stackPos];

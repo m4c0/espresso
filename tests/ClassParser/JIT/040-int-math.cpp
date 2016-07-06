@@ -17,6 +17,7 @@ static bool _test(const char * data, int size, int a, int b, int res) {
 }
 
 int main() {
+    if (!_test("\x1a\x1b\x60\xac", 4, 12, 4, 16)) return 1; // iload_0; iload_1; iadd; ireturn;
     if (!_test("\x1a\x1b\x64\xac", 4, 15, 5, 10)) return 1; // iload_0; iload_1; isub; ireturn;
     return 0;
 }
