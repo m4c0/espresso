@@ -13,8 +13,7 @@ namespace Espresso {
             Method();
             Method(ConstantPool::Manager & cpool, DataStream & data);
 
-            void * buildFunction(MethodProvider * methods) const { return code_.buildFunction(methods); }
-
+            JIT code() const;
         private:
             Attribute::Code code_;
         };

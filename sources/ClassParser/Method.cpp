@@ -8,7 +8,12 @@ Method::Method() : ClassEntry() {
 Method::Method(ConstantPool::Manager & cpool, DataStream & data) : ClassEntry(cpool, data) {
     if (!isAbstract()) {
         code_ = itemForName<Attribute::Code>("Code");
-        code_.signature(descriptor());
     }
+}
+
+JIT Method::code() const {
+    return code_.code()
+        .methodName(name())
+        .signature(descriptor());
 }
 
