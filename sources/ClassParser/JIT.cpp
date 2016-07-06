@@ -1,6 +1,7 @@
 #include "JIT.hpp"
 
 #include "ConstantPool/MethodRefInfo.hpp"
+#include "JIT/OperandStack.hpp"
 #include "JIT/ProgressNode.hpp"
 #include "Logger.hpp"
 
@@ -102,8 +103,7 @@ void * JIT::buildFunction(MethodProvider * methods) const {
 
     _progressStack = new ProgressNode(className_, methodName_, signature_, function, _progressStack);
 
-    auto stack = new jit_value_t[stackSize_];
-    auto stackPos = 0; // TODO: Add overrun and underrun checks
+    auto stack = OperandStack(function, stackSize_);
 
     auto locals = new jit_value_t[maxLocals_];
     for (int i = 0; i < jit_type_num_params(signature); i++) {
@@ -132,26 +132,26 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             case 6: // iconst_3
             case 7: // iconst_4
             case 8: // iconst_5
-                stack[stackPos++] = jit_value_create_nint_constant(function, jit_type_int, opcode - 3);
+                stack << jit_value_create_nint_constant(function, jit_type_int, opcode - 3);
                 break;
             case 9:  // lconst_0
             case 10: // lconst_1
-                stack[stackPos++] = jit_value_create_long_constant(function, jit_type_long, opcode - 9);
+                stack << jit_value_create_long_constant(function, jit_type_long, opcode - 9);
                 break;
             case 11: // fconst_0
             case 12: // fconst_1
             case 13: // fconst_2
-                stack[stackPos++] = jit_value_create_float32_constant(function, jit_type_float32, opcode - 11);
+                stack << jit_value_create_float32_constant(function, jit_type_float32, opcode - 11);
                 break;
             case 14: // dconst_0
             case 15: // dconst_1
-                stack[stackPos++] = jit_value_create_float64_constant(function, jit_type_float64, opcode - 14);
+                stack << jit_value_create_float64_constant(function, jit_type_float64, opcode - 14);
                 break;
             case 16: // bipush
-                stack[stackPos++] = jit_value_create_nint_constant(function, jit_type_int, data.readU8());
+                stack << jit_value_create_nint_constant(function, jit_type_int, data.readU8());
                 break;
             case 17: // sipush
-                stack[stackPos++] = jit_value_create_nint_constant(function, jit_type_int, data.readU16());
+                stack << jit_value_create_nint_constant(function, jit_type_int, data.readU16());
                 break;
             //case 18: // ldc - TODO: deal with constant pool items
             //case 19: // ldc_w - TODO: deal with constant pool items (2 bytes)
@@ -160,32 +160,32 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             case 22: // lload
             case 23: // fload
             case 24: // dload
-                stack[stackPos++] = locals[data.readU8()];
+                stack << locals[data.readU8()];
                 break;
             //case 25: aload
             case 26: // iload_0
             case 27: // iload_1
             case 28: // iload_2
             case 29: // iload_3
-                stack[stackPos++] = locals[opcode - 26];
+                stack << locals[opcode - 26];
                 break;
             case 30: // lload_0
             case 31: // lload_1
             case 32: // lload_2
             case 33: // lload_3
-                stack[stackPos++] = locals[opcode - 30];
+                stack << locals[opcode - 30];
                 break;
             case 34: // fload_0
             case 35: // fload_1
             case 36: // fload_2
             case 37: // fload_3
-                stack[stackPos++] = locals[opcode - 34];
+                stack << locals[opcode - 34];
                 break;
             case 38: // dload_0
             case 39: // dload_1
             case 40: // dload_2
             case 41: // dload_3
-                stack[stackPos++] = locals[opcode - 38];
+                stack << locals[opcode - 38];
                 break;
             //case 42-53: more loads
             case 54: // istore
@@ -193,60 +193,52 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             case 56: // fstore
             case 57: // dstore
             //case 58: // astore
-                locals[data.readU8()] = stack[--stackPos];
+                locals[data.readU8()] = *stack;
                 break;
             case 59: // istore_0
             case 60: // istore_1
             case 61: // istore_2
             case 62: // istore_3
-                locals[opcode - 59] = stack[--stackPos];
+                locals[opcode - 59] = *stack;
                 break;
             case 63: // lstore_0
             case 64: // lstore_1
             case 65: // lstore_2
             case 66: // lstore_3
-                locals[opcode - 63] = stack[--stackPos];
+                locals[opcode - 63] = *stack;
                 break;
             case 67: // fstore_0
             case 68: // fstore_1
             case 69: // fstore_2
             case 70: // fstore_3
-                locals[opcode - 67] = stack[--stackPos];
+                locals[opcode - 67] = *stack;
                 break;
             case 71: // dstore_0
             case 72: // dstore_1
             case 73: // dstore_2
             case 74: // dstore_3
-                locals[opcode - 71] = stack[--stackPos];
+                locals[opcode - 71] = *stack;
                 break;
             //case 75-86: more stores
-            case 96: { // iadd
-                auto one = stack[--stackPos];
-                auto two = stack[--stackPos];
-                stack[stackPos++] = jit_insn_add(function, two, one);
+            case 96: // iadd
+                stack.op2(jit_insn_add);
                 break;
-            }
-            case 100: { // isub
-                auto one = stack[--stackPos];
-                auto two = stack[--stackPos];
-                stack[stackPos++] = jit_insn_sub(function, two, one);
+            case 100: // isub
+                stack.op2(jit_insn_sub);
                 break;
-            }
             case 162: { // if_icmpge
+                stack.op2(jit_insn_ge);
+
                 auto pos = data.bytesRead() - 1;
                 auto jmp = data.readU16();
-
-                auto one = stack[--stackPos];
-                auto two = stack[--stackPos];
-                auto tmp = jit_insn_ge(function, two, one);
-                jit_insn_branch_if(function, tmp, labels + pos + jmp);
+                jit_insn_branch_if(function, *stack, labels + pos + jmp);
                 break;
             }
             case 172: // ireturn
             case 173: // lreturn
             case 174: // freturn
             case 175: // dreturn
-                jit_insn_return(function, stack[--stackPos]);
+                jit_insn_return(function, *stack);
                 break;
             case 177: // return
                 jit_insn_default_return(function);
@@ -272,12 +264,12 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                 auto argc = jit_type_num_params(sign);
                 auto args = new jit_value_t[argc];
                 for (int i = 0; i < argc; i++) {
-                    args[i] = stack[--stackPos];
+                    args[i] = *stack;
                 }
 
                 auto ipfn = _progressStack->find(info.className(), info.name(), info.descriptor());
                 if (ipfn) {
-                    stack[stackPos++] = jit_insn_call(function, 0, ipfn, sign, args, argc, JIT_CALL_NOTHROW);
+                    stack << jit_insn_call(function, 0, ipfn, sign, args, argc, JIT_CALL_NOTHROW);
                     delete[] args;
                     break;
                 }
@@ -287,7 +279,7 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                     if (Espresso::Log) Espresso::Log("Method not found: %s.%s%s", info.className(), info.name(), info.descriptor());
                     return 0;
                 }
-                stack[stackPos++] = jit_insn_call_native(function, 0, fn, sign, args, argc, JIT_CALL_NOTHROW);
+                stack << jit_insn_call_native(function, 0, fn, sign, args, argc, JIT_CALL_NOTHROW);
                 delete[] args;
                 break;
             }
