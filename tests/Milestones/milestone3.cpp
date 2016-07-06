@@ -35,22 +35,22 @@ int main(int argc, char ** argv) {
 
     auto vmp = Espresso::Blender::VMMethodProvider(&classdb);
 
-    int (*fn)(void *, int, int) = (int (*)(void *, int, int))vmp.getNativeMethod(cls->name(), "sum", "(II)I");
+    int (*fn)(int, int) = (int (*)(int, int))vmp.getNativeMethod(cls->name(), "doSum", "(II)I");
     if (!fn) {
         std::cerr << argv[1] << " does not contain sum(II)I" << std::endl;
         return 1;
     }
 
-    if (fn(0, 0, 0) != 0) {
-        std::cerr << "sum(0, 0) - expected 0, returned " << fn(0, 0, 0) << std::endl;
+    if (fn(0, 0) != 0) {
+        std::cerr << "sum(0, 0) - expected 0, returned " << fn(0, 0) << std::endl;
         return 1;
     }
-    if (fn(0, 1, 6) != 7) {
-        std::cerr << "sum(1, 6) - expected 7, returned " << fn(0, 1, 6) << std::endl;
+    if (fn(1, 6) != 7) {
+        std::cerr << "sum(1, 6) - expected 7, returned " << fn(1, 6) << std::endl;
         return 1;
     }
-    if (fn(0, -1, 6) != 5) {
-        std::cerr << "sum(-1, 6) - expected 5, returned " << fn(0, -1, 6) << std::endl;
+    if (fn(-1, 6) != 5) {
+        std::cerr << "sum(-1, 6) - expected 5, returned " << fn(-1, 6) << std::endl;
         return 1;
     }
 

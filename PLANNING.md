@@ -2,12 +2,15 @@
 
 ## Milestone 3: Instances
 
-+   *Objective:* Run the smallest piece of code that can give feedback from an instance
++   *Objective:* Run the smallest piece of code that can give feedback from a new instance
 +   *Example Code:*
 
         public class Example {
             int sum(int a, int b) {
                 return a + b;
+            }
+            static int doSum(int a, int b) {
+                return new Example().sum(a, b);
             }
         }
 
@@ -16,9 +19,13 @@
 +   *Expected New Features:*
     + Instance handling
     + Instance methods (i.e. something that receives "this" as first parameter)
+    + Basic GC
+    + "new" and "invokevirtual"
 +   *Caveats:*
-    + Instantiation can be done externally (i.e. without the "new" opcode)
-    + This simple example can ignore fields and possibly the constructor
+    + Originally, this milestone was counting only on instance methods, but the "minimal"
+      for this is the same as a class method, plus passing a "null" object. To force the
+      "minimal" to contain an instance, it was changed to instantiate and use that.
+    + Maybe constructors can be shamelessly ignored in this example (along with "invokespecial")
 
 ## Milestone 2: Flow control and recursive calls
 
