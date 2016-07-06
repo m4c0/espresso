@@ -72,6 +72,16 @@ const char * _convert_type(const char * sign, jit_type_t * t) {
         case 'F': *t = jit_type_float32; break;
         case 'I': *t = jit_type_int; break;
         case 'J': *t = jit_type_long; break;
+        case 'L': {
+            while (*++sign) {
+                switch (*sign) {
+                    case ';': *t = jit_type_void_ptr; return sign + 1;
+                    case ')': return 0;
+                    case 0: return 0;
+                }
+            }
+            return 0;
+        }
         case 'V': *t = jit_type_void; break;
         default: return 0;
     }
@@ -170,9 +180,9 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             case 22: // lload
             case 23: // fload
             case 24: // dload
+            case 25: // aload
                 stack << locals[data.readU8()];
                 break;
-            //case 25: aload
             case 26: // iload_0
             case 27: // iload_1
             case 28: // iload_2
@@ -197,7 +207,13 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             case 41: // dload_3
                 stack << locals[opcode - 38];
                 break;
-            //case 42-53: more loads
+            case 42: // aload_0
+            case 43: // aload_1
+            case 44: // aload_2
+            case 45: // aload_3
+                stack << locals[opcode - 42];
+                break;
+            //case 46-53: more loads
             case 54: // istore
             case 55: // lstore
             case 56: // fstore
@@ -253,17 +269,13 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             case 173: // lreturn
             case 174: // freturn
             case 175: // dreturn
+            case 176: // areturn
                 jit_insn_return(function, *stack);
                 break;
             case 177: // return
                 jit_insn_default_return(function);
                 break;
-            case 182: { // invokevirtual
-                // cheating tests like a boss
-                auto index = data.readU16();
-                *stack;
-                break;
-            }
+            case 182: // invokevirtual
             case 183: { // invokespecial
                 // cheating tests like a boss
                 auto index = data.readU16();

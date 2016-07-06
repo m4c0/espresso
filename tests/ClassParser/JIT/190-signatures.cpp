@@ -50,15 +50,24 @@ int main() {
     if (!_fails("()")) return 1;
     if (!_fails("V")) return 1;
     if (!_fails("()VV")) return 1;
+    if (!_fails("()L")) return 1;
+    if (!_fails("(L)V")) return 1;
+    if (!_fails("(L;)V")) return 1;
+    if (!_fails("(;)V")) return 1;
+    if (!_fails("(OK;)V")) return 1;
 
     if (!_check("()V", false, jit_type_void, 0)) return 1;
     if (!_check("()I", false, jit_type_int, 0)) return 1;
     if (!_check("()J", false, jit_type_long, 0)) return 1;
     if (!_check("()D", false, jit_type_float64, 0)) return 1;
     if (!_check("()F", false, jit_type_float32, 0)) return 1;
+    if (!_check("()LT;", false, jit_type_void_ptr, 0)) return 1;
+    if (!_check("()LT/T;", false, jit_type_void_ptr, 0)) return 1;
+    if (!_check("()LT/T$T;", false, jit_type_void_ptr, 0)) return 1;
     if (!_check("(I)I", false, jit_type_int, 1, jit_type_int)) return 1;
     if (!_check("(JI)I", false, jit_type_int, 2, jit_type_long, jit_type_int)) return 1;
     if (!_check("(DF)D", false, jit_type_float64, 2, jit_type_float64, jit_type_float32)) return 1;
+    if (!_check("(LT;LMeh;)I", false, jit_type_int, 2, jit_type_void_ptr, jit_type_void_ptr)) return 1;
 
     if (!_check("()V", true, jit_type_void, 1, jit_type_void_ptr)) return 1;
     if (!_check("(I)I", true, jit_type_int, 2, jit_type_void_ptr, jit_type_int)) return 1;
