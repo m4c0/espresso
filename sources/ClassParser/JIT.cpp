@@ -116,7 +116,7 @@ void * JIT::buildFunction() const {
     return buildFunction(0);
 }
 void * JIT::buildFunction(MethodProvider * methods) const {
-    jit_context_build_start(_context);
+    if (!_progressStack) jit_context_build_start(_context);
 
     auto signature = _convert_signature(signature_, instance_);
     auto function = jit_function_create(_context, signature);
@@ -299,7 +299,7 @@ void * JIT::buildFunction(MethodProvider * methods) const {
 
                 auto info = cpool_->itemForIndex<ConstantPool::MethodRefInfo>(index);
 
-                auto sign = _convert_signature(info.descriptor(), false);
+                auto sign = _convert_signature(info.descriptor(), opcode != 184);
                 auto argc = jit_type_num_params(sign);
                 auto args = new jit_value_t[argc];
                 for (int i = 0; i < argc; i++) {
@@ -344,7 +344,7 @@ void * JIT::buildFunction(MethodProvider * methods) const {
 #warning "do a '#if DEBUG' or something"
     jit_dump_function(stderr, function, 0);
     jit_function_compile(function);
-    jit_context_build_end(_context);
+    if (!_progressStack) jit_context_build_end(_context);
 
     return jit_function_to_closure(function);
 }
