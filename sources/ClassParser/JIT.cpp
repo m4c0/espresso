@@ -1,6 +1,7 @@
 #include "JIT.hpp"
 
 #include "ConstantPool/MethodRefInfo.hpp"
+#include "JIT/ProgressNode.hpp"
 #include "Logger.hpp"
 
 #include <jit/jit.h>
@@ -9,27 +10,9 @@
 #include <string.h>
 
 using namespace Espresso::ClassParser;
+using namespace Espresso::ClassParser::JITInternals;
 
-class InProgress {
-public:
-    InProgress(const char * c, const char * m, const char * s, jit_function_t f, InProgress * n) : clazz(c), method(m), signature(s), function(f), next(n) {}
-
-    jit_function_t find(const char * c, const char * m, const char * s) {
-        if ((strcmp(clazz, c) == 0) && (strcmp(method, m) == 0) && (strcmp(signature, s) == 0)) {
-            return function;
-        }
-        if (!next) return 0;
-        return next->find(c, m, s);
-    }
-
-    const char * clazz;
-    const char * method;
-    const char * signature;
-    jit_function_t function;
-
-    InProgress * next;
-};
-static InProgress * _progressStack = 0;
+static ProgressNode * _progressStack = 0;
 
 static jit_context_t _context;
 
@@ -117,7 +100,7 @@ void * JIT::buildFunction(MethodProvider * methods) const {
     auto signature = _convert_signature(signature_);
     auto function = jit_function_create(_context, signature);
 
-    _progressStack = new InProgress(className_, methodName_, signature_, function, _progressStack);
+    _progressStack = new ProgressNode(className_, methodName_, signature_, function, _progressStack);
 
     auto stack = new jit_value_t[stackSize_];
     auto stackPos = 0; // TODO: Add overrun and underrun checks
