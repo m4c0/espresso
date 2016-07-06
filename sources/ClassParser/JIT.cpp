@@ -275,13 +275,8 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             case 177: // return
                 jit_insn_default_return(function);
                 break;
-            case 183: { // invokespecial
-                // cheating tests like a boss
-                auto index = data.readU16();
-                *stack;
-                break;
-            }
             case 182: // invokevirtual
+            case 183: // invokespecial
             case 184: { // invokestatic
                 auto index = data.readU16();
                 if (!cpool_) {

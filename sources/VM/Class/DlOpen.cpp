@@ -13,6 +13,7 @@ char * _mangleCat(char * a, const char * b) {
 }
 
 char * _mangle(const char * cls, const char * method, const char * signature) {
+    // TODO: this is a major leak
     auto res = new char[10240]; // TODO: range checks
     strcpy(res, "ZN");
 
@@ -24,7 +25,12 @@ char * _mangle(const char * cls, const char * method, const char * signature) {
     }
     delete ccls;
 
-    ptr = _mangleCat(ptr, method);
+    if (strcmp("<init>", method) == 0) {
+        *ptr++ = 'C';
+        *ptr++ = '1';
+    } else {
+        ptr = _mangleCat(ptr, method);
+    }
 
     *ptr++ = 'E';
 
@@ -45,8 +51,9 @@ char * _mangle(const char * cls, const char * method, const char * signature) {
         return 0;
     }
     if (signature[-1] == '(') {
-        *ptr = 'v';
+        *ptr++ = 'v';
     }
+    *ptr = 0;
 
     return res;
 }

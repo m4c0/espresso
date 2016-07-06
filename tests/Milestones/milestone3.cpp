@@ -15,6 +15,8 @@ static void _log(const char * fmt, ...) {
     std::cerr << std::endl;
 }
 
+extern "C" void ZN4java4lang6ObjectC1Ev() {}
+
 int main(int argc, char ** argv) {
     if (argc != 2) {
         std::cerr << "Test must be called with the path to the test class" << std::endl;

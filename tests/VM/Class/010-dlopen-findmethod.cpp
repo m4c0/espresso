@@ -8,6 +8,7 @@
 // potentially dealing with other issues.
 extern "C" void ZN4Test5helloEv() {}
 extern "C" void ZN4Test5helloEi() {}
+extern "C" void ZN4More4TestC1Ev() {}
 extern "C" void ZN4More4Test6yoohooEv() {}
 extern "C" void ZN9More$Test6yoohooEv() {}
 extern "C" void ZN3And9More$Test4yeahEv() {}
@@ -40,6 +41,8 @@ int main() {
     if (!check("And/More$Test", "yeah", "()V", (void *)ZN3And9More$Test4yeahEv)) return 6;
     // Concrete example for Milestone 1
     if (!check("java/lang/System", "exit", "(I)V", (void *)ZN4java4lang6System4exitEi)) return 7;
+    // Init method
+    if (!check("More/Test", "<init>", "()V", (void *)ZN4More4TestC1Ev)) return 4;
     return 0;
 }
 
