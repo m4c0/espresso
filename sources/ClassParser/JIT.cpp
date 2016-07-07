@@ -144,7 +144,9 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                 // Just in case some kind of CPU cycle waste is required
                 jit_insn_nop(function);
                 break;
-            //case 1: // aconst_null TODO: deal with objects
+            case 1: // aconst_null
+                stack << jit_value_create_nint_constant(function, jit_type_void_ptr, 0);
+                break;
             case 2: // iconst_m1
             case 3: // iconst_0
             case 4: // iconst_1
