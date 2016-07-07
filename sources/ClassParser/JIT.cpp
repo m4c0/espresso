@@ -112,6 +112,14 @@ jit_type_t _convert_signature(const char * sign, bool instance) {
     return jit_type_create_signature(jit_abi_cdecl, ret, args, argc, 0);
 }
 
+void _buildJump(jit_function_t function, OperandStack & stack, jit_label_t * labels, DataStream & data, jit_value_t(*fn)(jit_function_t, jit_value_t, jit_value_t)) {
+    stack.op2(fn);
+
+    auto pos = data.bytesRead() - 1;
+    auto jmp = data.readU16();
+    jit_insn_branch_if(function, *stack, labels + pos + jmp);
+}
+
 void * JIT::buildFunction() const {
     return buildFunction(0);
 }
@@ -259,14 +267,12 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             case 100: // isub
                 stack.op2(jit_insn_sub);
                 break;
-            case 162: { // if_icmpge
-                stack.op2(jit_insn_ge);
-
-                auto pos = data.bytesRead() - 1;
-                auto jmp = data.readU16();
-                jit_insn_branch_if(function, *stack, labels + pos + jmp);
+            case 160: // if_icmpne
+                _buildJump(function, stack, labels, data, jit_insn_ne);
                 break;
-            }
+            case 162: // if_icmpge
+                _buildJump(function, stack, labels, data, jit_insn_ge);
+                break;
             case 172: // ireturn
             case 173: // lreturn
             case 174: // freturn

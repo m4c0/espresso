@@ -32,6 +32,12 @@ int main() {
     if (fn(  0) != 1) return 3;
     if (fn(-10) != 2) return 4;
 
+    jit.dataStream(DataStream("\x1a\x03\xa0\x00\x05\x05\xac\x04\xac", 9)); // same with ne
+    fn = (int(*)(int))jit.buildFunction();
+    if (fn(0) != 2) return 5;
+    if (fn(1) != 1) return 6;
+
+
     return 0;
 }
 
