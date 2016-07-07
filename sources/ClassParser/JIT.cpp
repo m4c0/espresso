@@ -277,6 +277,30 @@ void * JIT::buildFunction(MethodProvider * methods) const {
             case 177: // return
                 jit_insn_default_return(function);
                 break;
+            case 178: { // getstatic
+                auto index = data.readU16();
+                auto object = *stack;
+                stack << jit_value_create_nint_constant(function, jit_type_void_ptr, 0);
+                break;
+            }
+            case 179: { // putstatic
+                auto index = data.readU16();
+                auto object = *stack;
+                auto value = *stack;
+                break;
+            }
+            case 180: { // getfield
+                auto index = data.readU16();
+                auto object = *stack;
+                stack << jit_value_create_nint_constant(function, jit_type_void_ptr, 0);
+                break;
+            }
+            case 181: { // putfield
+                auto index = data.readU16();
+                auto object = *stack;
+                auto value = *stack;
+                break;
+            }
             case 182: // invokevirtual
             case 183: // invokespecial
             case 184: { // invokestatic
@@ -339,7 +363,7 @@ void * JIT::buildFunction(MethodProvider * methods) const {
     _progressStack = next;
 
 #warning "do a '#if DEBUG' or something"
-    jit_dump_function(stderr, function, 0);
+    jit_dump_function(stderr, function, methodName_);
     jit_function_compile(function);
     if (!_progressStack) jit_context_build_end(_context);
 
