@@ -10,4 +10,5 @@ endfunction()
 espresso_milestone(milestone1 Milestone1)
 espresso_milestone(milestone2 Milestone2)
 espresso_milestone(milestone3 Milestone3)
+espresso_milestone(milestone4 Milestone4)
 

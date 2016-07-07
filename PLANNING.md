@@ -1,5 +1,23 @@
 # Milestones
 
+## Milestone 4: Fields
+
++   *Objective:* Run the smallest piece of code that can store information inside an instance
++   *Code Rules:*
+    + Simple linked list. Milestone class is a linked list node, with a value and a pointer
+      to the next item.
+    + A static initializer creates the list
+    + A static method pass the search to the first item
+    + Each item calls the next for the search
++   *Reasonings:*
+    + Without fields, there's no reason for instance management - a null pointer can represent
+      a world of classes without fields.
++   *Expected New Features:*
+    + Fields (both static and instance)
+    + Basic GC
++   *Caveats:*
+    + GC is still optional. We can just leak everything and leave GC for a next milestone.
+
 ## Milestone 3: Instances
 
 +   *Objective:* Run the smallest piece of code that can give feedback from a new instance
