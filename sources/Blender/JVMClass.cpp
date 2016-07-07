@@ -46,6 +46,9 @@ const char * JVMClass::name() const {
 void * JVMClass::findMethod(const char * method, const char * signature) {
     if (!methods_) {
         methods_ = methods() ? new Method(methods()) : 0;
+
+        auto clinit = (void(*)())findMethod("<clinit>", "()V");
+        if (clinit) clinit();
     }
     auto owner = methods_->findMethod(method, signature);
     if (!owner) return 0;
