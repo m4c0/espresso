@@ -83,6 +83,7 @@ const char * _convert_type(const char * sign, jit_type_t * t) {
             return 0;
         }
         case 'V': *t = jit_type_void; break;
+        case 'Z': *t = jit_type_int; break;
         default: return 0;
     }
     return sign;
@@ -112,13 +113,17 @@ jit_type_t _convert_signature(const char * sign, bool instance) {
     return jit_type_create_signature(jit_abi_cdecl, ret, args, argc, 0);
 }
 
-void _buildJump(jit_function_t function, bool ifnot, OperandStack & stack, jit_label_t * labels, DataStream & data) {
+jit_label_t * _branchLabel(jit_label_t * labels, DataStream & data) {
     auto pos = data.bytesRead() - 1;
     auto jmp = data.readU16();
+    return labels + pos + jmp;
+}
+void _buildJump(jit_function_t function, bool ifnot, OperandStack & stack, jit_label_t * labels, DataStream & data) {
+    auto lbl = _branchLabel(labels, data);
     if (ifnot) {
-        jit_insn_branch_if_not(function, *stack, labels + pos + jmp);
+        jit_insn_branch_if_not(function, *stack, lbl);
     } else {
-        jit_insn_branch_if(function, *stack, labels + pos + jmp);
+        jit_insn_branch_if(function, *stack, lbl);
     }
 }
 
@@ -277,6 +282,9 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                 stack.op2(jit_insn_ge);
                 _buildJump(function, false, stack, labels, data);
                 break;
+            case 167: // goto
+                jit_insn_branch(function, _branchLabel(labels, data));
+                break;
             case 172: // ireturn
             case 173: // lreturn
             case 174: // freturn
@@ -289,13 +297,11 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                 break;
             case 178: { // getstatic
                 auto index = data.readU16();
-                auto object = *stack;
                 stack << jit_value_create_nint_constant(function, jit_type_void_ptr, 0);
                 break;
             }
             case 179: { // putstatic
                 auto index = data.readU16();
-                auto object = *stack;
                 auto value = *stack;
                 break;
             }
