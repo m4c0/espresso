@@ -112,12 +112,14 @@ jit_type_t _convert_signature(const char * sign, bool instance) {
     return jit_type_create_signature(jit_abi_cdecl, ret, args, argc, 0);
 }
 
-void _buildJump(jit_function_t function, OperandStack & stack, jit_label_t * labels, DataStream & data, jit_value_t(*fn)(jit_function_t, jit_value_t, jit_value_t)) {
-    stack.op2(fn);
-
+void _buildJump(jit_function_t function, bool ifnot, OperandStack & stack, jit_label_t * labels, DataStream & data) {
     auto pos = data.bytesRead() - 1;
     auto jmp = data.readU16();
-    jit_insn_branch_if(function, *stack, labels + pos + jmp);
+    if (ifnot) {
+        jit_insn_branch_if_not(function, *stack, labels + pos + jmp);
+    } else {
+        jit_insn_branch_if(function, *stack, labels + pos + jmp);
+    }
 }
 
 void * JIT::buildFunction() const {
@@ -268,10 +270,12 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                 stack.op2(jit_insn_sub);
                 break;
             case 160: // if_icmpne
-                _buildJump(function, stack, labels, data, jit_insn_ne);
+                stack.op2(jit_insn_ne);
+                _buildJump(function, false, stack, labels, data);
                 break;
             case 162: // if_icmpge
-                _buildJump(function, stack, labels, data, jit_insn_ge);
+                stack.op2(jit_insn_ge);
+                _buildJump(function, false, stack, labels, data);
                 break;
             case 172: // ireturn
             case 173: // lreturn
@@ -355,6 +359,12 @@ void * JIT::buildFunction(MethodProvider * methods) const {
                 stack << jit_value_create_nint_constant(function, jit_type_void_ptr, 0);
                 break;
             }
+            case 198: // if_null
+                _buildJump(function, true, stack, labels, data);
+                break;
+            case 199: // if_notnull
+                _buildJump(function, false, stack, labels, data);
+                break;
             default:
                 if (Espresso::Log) Espresso::Log("Unknown opcode: %02x", opcode);
 
